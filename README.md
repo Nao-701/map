@@ -4,7 +4,7 @@
 
 ### 立体表現による電力需要の可視化
 ・1年間（8760時間）の電力需要を10地域分可視化しました．
-
+[中部電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Chubu.html)
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
 ```markdown
@@ -29,7 +29,7 @@ For more details see [Basic writing and formatting syntax](https://docs.github.c
 
 ### Jekyll Themes
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/naohiro701/main/3D/elect_demand_TSO_Chubu.html). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings][https://github.com/naohiro701/main](https://naohiro701.github.io/main/3D/elect_demand_TSO_Chubu.html). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
 ### Support or Contact
 

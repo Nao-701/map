@@ -1,10 +1,9 @@
 ## Welcome to My Pages
 
-You can use the [editor on GitHub](https://github.com/Naohiroki/map/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+日本の電力の可視化をしているものになります．
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
+### ３Dで可視化
+・1年間（8760時間）の電力需要を10地域分可視化しています．
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 

@@ -5,7 +5,7 @@
 ### 立体表現による電力需要の可視化
 ・1年間（8760時間）の電力需要を10地域分，可視化しました．
 
-[北海道電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Hokkadio.html)
+[北海道電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Hokkaio.html)
 
 [東北電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Tohoku.html)
 

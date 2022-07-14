@@ -2,8 +2,8 @@
 
 日本の電力の可視化をしているものになります．
 
-### ３Dで可視化
-・1年間（8760時間）の電力需要を10地域分可視化しています．
+### 立体表現による電力需要の可視化
+・1年間（8760時間）の電力需要を10地域分可視化しました．
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 

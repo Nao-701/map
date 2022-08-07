@@ -2,39 +2,173 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>404 pages can find</title>
+  <title>Distributed energy gabbage page</title>
   <meta name="description"  content="ゴミのようなサイトです">
-  
+
 </head>
 
 
 
 <body>
   <canvas id="myCanvas"  style="width: 100%; height: 100%;"></canvas>
-  <h1>Data Visualization</h1>
+
+<div id="app">
+  <span id="typewriter"></span>
+</div>
 
   <div class="menu">
     <div class="label">Follow Me</div>
     <div class="spacer"></div>
-    <div class="item"><span><a href="https://twitter.com/n_hiro__701" target="_blank" rel="norefferrer">Twitter</a></span></div>
+    <div class="item"><span><a href="https://twitter.com" target="_blank" rel="norefferrer">Twitter</a></span></div>
     <div class="item"><span><a href="https://note.com/b_giganteus" target="_blank" rel="norefferrer">NOTE</a></span></div>
     <div class="item"><span><a href="https://github.com/naohiro701/main" target="_blank" rel="norefferrer">GitHub</a></span></div>
   </div>
 
 <center>
-  <h2>こちらのサイトでは， エネルギーに関する可視化をしていきます．</h2>
+  <h2>こちらのサイトでは，エネルギーの「時間偏在性」,「空間偏在性」を可視化をしていきます．</h2>
 </center>
-  <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Chubu.html" target="_blank rel="noreferrer noopener" style="width: 50%; min-width:720px; height: 1000px;" frameborder="0" >
+
+  <h1>地域別の年間需要実績（2019）</h1>
+
+  <div class="tabs">
+    <input id="hokkaido" type="radio" name="tab_item" checked>
+    <label class="tab_item" for="hokkaido">北海道</label>
+
+    <input id="tohoku" type="radio" name="tab_item">
+    <label class="tab_item" for="tohoku">東北</label>
+
+    <input id="tokyo" type="radio" name="tab_item">
+    <label class="tab_item" for="tokyo">東京</label>
+
+    <input id="hokuriku" type="radio" name="tab_item">
+    <label class="tab_item" for="hokuriku">北陸</label>
+
+    <input id="chubu" type="radio" name="tab_item">
+    <label class="tab_item" for="chubu">中部</label>
+
+    <input id="kansai" type="radio" name="tab_item">
+    <label class="tab_item" for="kansai">関西</label>
+
+    <input id="chugoku" type="radio" name="tab_item">
+    <label class="tab_item" for="chugoku">中国</label>
+
+    <input id="shikoku" type="radio" name="tab_item">
+    <label class="tab_item" for="shikoku">四国</label>
+
+    <input id="kyushu" type="radio" name="tab_item">
+    <label class="tab_item" for="kyushu">九州</label>
+
+    <input id="okinawa" type="radio" name="tab_item">
+    <label class="tab_item" for="okinawa">沖縄</label>
+
+    <div class="tab_content" id="hokkaido_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Hokkaido.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="tohoku_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Tohoku.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="tokyo_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Tokyo.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="hokuriku_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Hokuriku.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="chubu_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Chubu.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="kansai_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Kansai.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="chugoku_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Chugoku.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="shikoku_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Shikoku.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="kyushu_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Kyushu.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+
+    <div class="tab_content" id="okinawa_content">
+      <div class="tab_content_description">
+        <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Okinawa.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <center>
+  <h2>気候の違いによって，夏と冬の電力消費の傾向が異なることがわかる．</h2>
+  </center>
+
+  <h3>東北電力管内の年間需要実績（2019）</h3>
+  <iframe src="https://naohiro701.github.io/main/3D/elect_demand_dust_TSO_Tohoku.html" target=_blank rel="noreferrer noopener" style="width:90%; height: 1000px;" frameborder="0" >
   </iframe>
+
+  <h3>本日の東北電力の供給実績</h3>
+  <center>
+  <iframe width="1760" height="822" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSEDjwrWIlhtCRhC2ngoqtfRHcnBURIBwephEtprz2mQHRhpAcucb_2xrUXO4fGdKbwDcjW2E8fb2vz/pubchart?oid=1245999437&amp;format=interactive"></iframe>
+  </center>
+
+  <h3>参考文献</h3>
+  <div class ="ref">
+    <a href="https://www.hepco.co.jp/network/renewable_energy/fixedprice_purchase/supply_demand_results.html">[1] 北海道電力ネットワーク株式会社, “北海道エリアの需給実績”,  [Accessed June 19, 2022]</a></br>
+    <a href="https://setsuden.nw.tohoku-epco.co.jp/download.html">[2] 東北電力ネットワーク, “過去実績データのダウンロード”, [Accessed June 19, 2022]</a></br>
+    <a href="https://www.tepco.co.jp/forecast/html/area_data-j.html">[3] 東京電力パワーグリッド株式会社, ”エリア需給実績データについて”, [Accessed June 19, 2022]</a></br>
+    <a href="https://www.rikuden.co.jp/nw_jyukyudata/area_jisseki.html">[4] 北陸電力送配電株式会社，”エリア需給実績について”, [Accessed June 19, 2022]</a></br>
+    <a href="https://powergrid.chuden.co.jp/denkiyoho/">[5] 中部電力パワーグリッド , “でんき予報”, , [Accessed June 19, 2022]</a></br>
+    <a href="https://www.kansai-td.co.jp/denkiyoho/area-performance.html">[6] 関西電力送配電株式会社 , “関西エリアの需給実績の公表”, [Accessed June 19, 2022]</a></br>
+    <a href="https://www.energia.co.jp/nw/service/retailer/data/area/">[7] 中国電力ネットワーク， “供給区域の需給実績”, [Accessed June 19, 2022]</a></br>
+    <a href="https://www.yonden.co.jp/nw/denkiyoho/index.html">[8] 四国電力送配電株式会社, “でんき予報(四国エリアの電力使用状況)”, [Accessed June 19, 2022]</a></br>
+    <a href="https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure">[9] 九州電力送配電, “系統情報の公開”, [Accessed June 19, 2022]</a></br>
+    <a href="https://www.okiden.co.jp/business-support/service/supply-and-demand/">[10] 沖縄電力, “需給関連情報(需給実績)の公表”, [Accessed June 19, 2022]</a></br>
+    <a href="https://setsuden.nw.tohoku-epco.co.jp/graph.html"> 東北電力ネットワーク, “東北6県・新潟エリアでんき予報”</a></br>
+  </div>
+
 
 
 </body>
-													  
-													  
+
+
 <script>
   var width_screen = window.innerWidth;
   var height_screen =  window.innerHeight;
-  
+
   var switch1=1;
   var fps=60;
   var n=200;
@@ -42,7 +176,7 @@
   var strong=20;
   var radium=8;
   var radium_vortex=0;
-  
+
   let color=[
   "#0095DD","#f0e68c","#90ee90","#c71585",
   "#4682b4","#f0312f","#008080","#ff7f50",
@@ -55,7 +189,7 @@
   canvas.height = window.innerHeight*4;
   var x0=canvas.width;
   var y0=canvas.height;
-  
+
   var margin=100;
   var xx,yy,vx,vy,i,j,distance;
   //x0*y0/margin^2;
@@ -65,18 +199,18 @@
   var x_vortex = Array(m);
   var y_vortex = Array(m);
   var Gammma = Array(m);
-  
+
   for (i = 0; i < n; i++){
     x[i]=Math.floor(Math.random()*(x0*1.4))-x0*0.2 ;
     y[i]=Math.floor(Math.random()*(y0*1.4))-y0*0.2 ;
   }
-  
+
   for (i = 0; i < m; i++){
     x_vortex[i]=Math.floor(Math.random()*(x0)) ;
     y_vortex[i]=Math.floor(Math.random()*(y0)) ;
     Gammma[i]=(Math.floor(Math.random()*(100))-50 )*strong;
   }
-  
+
   function drawBall() {
     for(i=0;i<m;i++){
       ctx.beginPath();
@@ -85,7 +219,7 @@
       ctx.fill();
       ctx.closePath();
     }
-    
+
     for(i=0;i<n;i++){
       ctx.beginPath();
       ctx.arc(x[i], y[i], radium, 0, Math.PI*2);
@@ -95,7 +229,7 @@
     }
   }
   window.addEventListener('resize', draw);
-  
+
   function draw() {
     ctx.clearRect(-x0*3*switch1, -y0*3*switch1, x0*3, y0*3);
     drawBall();
@@ -112,7 +246,7 @@
       x[i]+=vx;
       y[i]+=vy;
     }
-    
+
     for(i=0;i<m;i++){
       vx=0;
       vy=0;
@@ -125,62 +259,93 @@
           vy+=Gammma[j]*xx/distance;
         }
       }
-      
+
       x_vortex[i]+=vx;
       y_vortex[i]+=vy;
     }
-    
   }
   setInterval(draw, 1000 / fps);
 </script>
 
+
+<script>
+const typewriter = (param) => {
+    let el = document.querySelector(param.el);
+    let speed = param.speed;
+    let string = param.string.split("");
+
+    string.forEach((char, index) => {
+        setTimeout(() => {
+            el.textContent += char;
+        }, speed * index);
+    });
+};
+
+typewriter({
+    el: "#typewriter",
+    speed:150,
+    string: "Data Visualization                                                                                                        for energy"
+});
+</script>
 </html>
 
 <style>
   @import url('https://fonts.googleapis.com/css?family=Lato');
-  
-  body { 
-    color: #333333;
+
+  body {
+    color: #ffffff;
     background-color: white;
-    font-family: cursive;
+    font-family: Helvetica, Arial, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, Verdana, "游ゴシック", YuGothic, sans-serif;
+    font-size: 30px;
   }
   a{
     text-decoration: none;
+    color: #ffffff;
   }
   h1 {
-    position: absolute;
-    color: #ffffff;
-    top: 50%;
-    left: 50%;
-    font-size: 60px;
-    -ms-transform: translate(-50%,-50%);
-    -webkit-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
-    margin:0;
-    padding:0;
+    color: #000000;
+    font-size: 30px;
+    text-align: center;
+    margin-bottom:15px;
   }
-  
+
   h2 {
     color: #000000;
-    font-size: 20px;
-    margin:20;
+    font-size: 30px;
+    margin-top:40%;
+    margin-bottom:40%;
     padding:20;
+
+  }
+  h3 {
+    color: #000000;
+    font-size: 30px;
+    margin-right:10%;
+    margin-left:10%;
+    border-bottom: solid 3px black;
   }
   canvas {
     background-color: black;
     color: #ffffff
   }
-  
+
   iframe{
     text-align: center;
   }
-  
+
   * {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
   }
+  .ref a{
+    color: #000000;
+    font-size: 16px;
+    margin-right:10%;
+    margin-left:10%;
+  }
   .menu {
+    font-family: cursive;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.8);
     display: inline-block;
@@ -299,4 +464,101 @@
   .menu:hover .item:nth-child(10) {
     transition-delay: 0.7s;
   }
+
+/*タイピングアニメーションのコード */
+  #app {
+    position: absolute;
+    font-family: cursive;
+    color: #ffffff;
+    top: 50%;
+    left: 50%;
+    font-size: 80px;
+    -ms-transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    margin:0;
+    padding:0;
+    line-height: 1.5;
+    background-color: transparent;
+
+}
+
+#typewriter::after {
+    content: "|";
+    animation-name: blink;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes blink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/*タブ切り替え全体のスタイル*/
+.tabs {
+  margin-top: 50px;
+  padding-bottom: 40px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  margin: 0 auto;}
+
+/*タブのスタイル*/
+.tab_item {
+  width: calc(100%/10);
+  height: 50px;
+  border-bottom: 3px solid #5ab4bd;
+  background-color: #d9d9d9;
+  line-height: 50px;
+  font-size: 16px;
+  text-align: center;
+  color: #565656;
+  display: block;
+  float: left;
+  text-align: center;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+.tab_item:hover {
+  opacity: 0.75;
+}
+
+/*ラジオボタンを全て消す*/
+input[name="tab_item"] {
+  display: none;
+}
+
+/*タブ切り替えの中身のスタイル*/
+.tab_content {
+  display: none;
+  padding: 40px 40px 0;
+  clear: both;
+  overflow: hidden;
+}
+
+
+/*選択されているタブのコンテンツのみを表示*/
+#hokkaido:checked ~ #hokkaido_content,
+#tohoku:checked ~ #tohoku_content,
+#tokyo:checked ~ #tokyo_content,
+#hokuriku:checked ~ #hokuriku_content,
+#chubu:checked ~ #chubu_content,
+#kansai:checked ~ #kansai_content,
+#chugoku:checked ~ #chugoku_content,
+#shikoku:checked ~ #shikoku_content,
+#kyushu:checked ~ #kyushu_content,
+#okinawa:checked ~ #okinawa_content {
+  display: block;
+}
+
+/*選択されているタブのスタイルを変える*/
+.tabs input:checked + .tab_item {
+  background-color: #5ab4bd;
+  color: #fff;
+}
 </style>

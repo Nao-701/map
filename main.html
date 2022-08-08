@@ -7,8 +7,6 @@
 
 </head>
 
-
-
 <body>
   
 <h3>地域別の年間需要実績（2019）</h3>
@@ -141,134 +139,7 @@
     <a href="https://www.okiden.co.jp/business-support/service/supply-and-demand/">[10] 沖縄電力, “需給関連情報(需給実績)の公表”, [Accessed June 19, 2022]</a></br>
     <a href="https://setsuden.nw.tohoku-epco.co.jp/graph.html"> 東北電力ネットワーク, “東北6県・新潟エリアでんき予報”</a></br>
   </div>
-
-
-
 </body>
-
-
-<script>
-  var width_screen = window.innerWidth;
-  var height_screen =  window.innerHeight;
-
-  var switch1=1;
-  var fps=60;
-  var n=200;
-  var m=7;
-  var strong=20;
-  var radium=8;
-  var radium_vortex=0;
-
-  let color=[
-  "#0095DD","#f0e68c","#90ee90","#c71585",
-  "#4682b4","#f0312f","#008080","#ff7f50",
-  "#3cb371","#db7093","#902d9f","#daa520",
-  "#0095DD","#f0e68c","#90ee90","#c71585",
-  ]
-  var canvas = document.getElementById("myCanvas");
-  var ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth*4;
-  canvas.height = window.innerHeight*4;
-  var x0=canvas.width;
-  var y0=canvas.height;
-
-  var margin=100;
-  var xx,yy,vx,vy,i,j,distance;
-  //x0*y0/margin^2;
-  var x = Array(n);
-  var y = Array(n);
-  //Math.floor(Math.random()*(5))+5;
-  var x_vortex = Array(m);
-  var y_vortex = Array(m);
-  var Gammma = Array(m);
-
-  for (i = 0; i < n; i++){
-    x[i]=Math.floor(Math.random()*(x0*1.4))-x0*0.2 ;
-    y[i]=Math.floor(Math.random()*(y0*1.4))-y0*0.2 ;
-  }
-
-  for (i = 0; i < m; i++){
-    x_vortex[i]=Math.floor(Math.random()*(x0)) ;
-    y_vortex[i]=Math.floor(Math.random()*(y0)) ;
-    Gammma[i]=(Math.floor(Math.random()*(100))-50 )*strong;
-  }
-
-  function drawBall() {
-    for(i=0;i<m;i++){
-      ctx.beginPath();
-      ctx.arc(x_vortex[i], y_vortex[i], radium_vortex, 0, Math.PI*2);
-      ctx.fillStyle = color[1];
-      ctx.fill();
-      ctx.closePath();
-    }
-
-    for(i=0;i<n;i++){
-      ctx.beginPath();
-      ctx.arc(x[i], y[i], radium, 0, Math.PI*2);
-      ctx.fillStyle = color[i%16];
-      ctx.fill();
-      ctx.closePath();
-    }
-  }
-  window.addEventListener('resize', draw);
-
-  function draw() {
-    ctx.clearRect(-x0*3*switch1, -y0*3*switch1, x0*3, y0*3);
-    drawBall();
-    for(i=0;i<n;i++){
-      vx=0;
-      vy=0;
-      for(j=0;j<m;j++){
-        xx = x[i]-x_vortex[j];
-        yy = y[i]-y_vortex[j];
-        distance = xx*xx + yy*yy;
-        vx-=Gammma[j]*yy/distance;
-        vy+=Gammma[j]*xx/distance;
-      }
-      x[i]+=vx;
-      y[i]+=vy;
-    }
-
-    for(i=0;i<m;i++){
-      vx=0;
-      vy=0;
-      for(j=0;j<m;j++){
-        if(i!=j){
-          xx = x_vortex[i]-x_vortex[j];
-          yy = y_vortex[i]-y_vortex[j];
-          distance = xx*xx + yy*yy;
-          vx-=Gammma[j]*yy/distance;
-          vy+=Gammma[j]*xx/distance;
-        }
-      }
-
-      x_vortex[i]+=vx;
-      y_vortex[i]+=vy;
-    }
-  }
-  setInterval(draw, 1000 / fps);
-</script>
-
-
-<script>
-const typewriter = (param) => {
-    let el = document.querySelector(param.el);
-    let speed = param.speed;
-    let string = param.string.split("");
-
-    string.forEach((char, index) => {
-        setTimeout(() => {
-            el.textContent += char;
-        }, speed * index);
-    });
-};
-
-typewriter({
-    el: "#typewriter",
-    speed:150,
-    string: "Data Visualization                                                                                                        for energy"
-});
-</script>
 </html>
 
 <style>

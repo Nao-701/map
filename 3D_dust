@@ -1,0 +1,38 @@
+import plotly.graph_objects as go
+import numpy as np
+import pandas as pd
+curtailment  = pd.read_csv('wo-elefi-elect_demand.csv')
+REGION_name = ["TSO_Hokkaido","TSO_Tohoku","TSO_Tokyo","TSO_Hokuriku","TSO_Chubu","TSO_Kansai","TSO_Chugoku","TSO_Shikoku","TSO_Kyushu","TSO_Okinawa"]
+
+for reg in REGION_name:
+    data = curtailment[[reg, "day", "hours"]]
+    data[reg] = - data[reg]
+    fig = go.Figure(data=[go.Scatter3d(
+        x=data['hours'],
+        y=data['day'],
+        z=data[reg],
+        mode='markers',
+        
+        marker = dict(
+        sizeref=750,
+        size= 3,
+        color = data[reg],
+        colorscale = 'Viridis',
+        colorbar_title = 'Value',
+        line_color='rgb(140, 140, 170)'
+    )
+    )])
+
+    fig.update_layout(
+        #width=800, height=800, title = 'Planets!',
+    scene = dict(
+    xaxis=dict(title='Hour', titlefont_color='Black', backgroundcolor="#FFFFFF"),
+    yaxis=dict(title='Day', titlefont_color='Black', backgroundcolor="#FFFFFF"),
+    zaxis=dict(title='Value', titlefont_color='Black', backgroundcolor="#FFFFFF"),
+    # bgcolor = 'rgb(20, 24, 54)'
+    ))
+
+    # tight layout
+    fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
+    fig.show()
+    fig.write_html("3D/elect_demand_dust_%s.html"% reg)

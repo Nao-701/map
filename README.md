@@ -1,4 +1,4 @@
-## Hello World
+## The target here is Japan 
 
 In this page, it is focused on the code for visualising data from Japan's energy sector, on HTML-based web pages.
 

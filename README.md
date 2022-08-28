@@ -7,4 +7,6 @@ In this page, it will be shown the code for visualising data from Japan's energy
 
 [北海道電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Hokkaido.html)，[東北電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Tohoku.html)，[東京電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Tokyo.html)，[北陸電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Hokuriku.html)，[中部電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Chubu.html)，[関西電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Kansai.html)，[中国電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Chugoku.html)，[四国電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Shikoku.html)，[九州電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Kyushu.html)，[沖縄電力](https://naohiro701.github.io/main/3D/elect_demand_TSO_Okinawa.html)
 
-As of 2022, Japan is divided into 47 prefectures (都道府県, todōfuken), and they are further divided into 1,741 municipalities (市区町村, shikuchōson), including 23 special wards of Tokyo.
+### Map
+As of 2022, Japan is divided into 47 prefectures (都道府県, todōfuken), and they are further divided into 1,741 municipalities (市区町村, shikuchōson).
+

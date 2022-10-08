@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html><head><style>
+	body {color: white;
+		background-color: black}
+	</style>
+	
+		<meta charset="utf-8" />
+		<title>Imony-vortex</title>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="1920" height="1055" style="width: 100%; height: 100%;" />
+		<script>
+		var r=100;
+		var U=10;
+		var pp=10;
+		var switch1=1;
+		var fps=60;
+		var n=5000;
+		var m=10;
+		var radium=2;
+		var radium_vortex=0;
+		var strong=1000;
+
+		let color=[
+			"#0095DD","#f0e68c","#90ee90","#c71585",
+			"#4682b4","#f0312f","#008080","#ff6c36",
+			"#3cb371","#db7093","#902d9f","#daa520",
+			"#00E5DD","#f0e68c","#90ee90","#c71585",
+		]
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+		canvas.width=screen.availWidth*1;
+		canvas.height=screen.availHeight*1;
+		var x0=canvas.width;
+		var y0=canvas.height;
+		var rx0 = x0*0.5;
+		var ry0 = y0*0.5;
+
+		var margin=100;
+		var xx,yy,vx,vy,i,j,distance,vr,vtheta;
+		//x0*y0/margin^2;
+		var x = Array(n);
+		var y = Array(n);
+		//Math.floor(Math.random()*(5))+5;
+		var x_vortex = Array(m);
+		var y_vortex = Array(m);
+		var Gammma = Array(m);
+
+		for (i = 0; i < n; i++){
+			x[i]=Math.random()*(x0*pp/10)+x0*(0.1-pp/20) ;
+			y[i]=Math.random()*y0*1.4-y0*0.2 ;
+		}
+
+		function drawBall() {
+			for(i=0;i<m;i++){
+				ctx.beginPath();
+				ctx.arc(x_vortex[i], y_vortex[i], radium_vortex, 0, Math.PI*2);
+				ctx.fillStyle = color[1];
+				ctx.fill();
+				ctx.closePath();
+		}
+
+			for(i=0;i<n;i++){
+				ctx.beginPath();
+				ctx.arc(x[i], y[i], radium, 0, Math.PI*2);
+				ctx.fillStyle = color[i%16];
+				ctx.fill();
+				ctx.closePath();
+		}
+	}
+		function draw() {
+				    ctx.clearRect(0, 0, x0*switch1, y0*switch1);
+			drawBall();
+			for(i=0;i<n;i++){
+				vx=0;
+				vy=0;
+						xx = x[i]-rx0;
+						yy = y[i]-ry0;
+						distance = xx*xx + yy*yy;
+						vr=U*(1-r*r/distance)*xx/Math.sqrt(distance);
+						vtheta=-U*(1+r*r/distance)*yy/Math.sqrt(distance)-strong/Math.sqrt(distance);
+						vx=vr*xx/Math.sqrt(distance)-vtheta*yy/Math.sqrt(distance);
+						vy=vr*yy/Math.sqrt(distance)+vtheta*xx/Math.sqrt(distance);
+				x[i]+=vx;
+				y[i]+=vy;
+				if(x[i]>x0){
+					x[i]=0;
+					y[i]=Math.random()*y0*1.4-y0*0.2 ;
+				}
+		}
+	}
+		setInterval(draw, 1000 / fps);
+	</script>
+	
+	
+</body></html>

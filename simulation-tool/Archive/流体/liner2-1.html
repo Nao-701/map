@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)https://mathmaticsphysics.web.fc2.com/Dust-2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+body { color: white;
+  background-color: white }
+</style>
+
+  <title>Imony-Dust</title>
+</head>
+<body data-new-gr-c-s-check-loaded="14.1014.0" data-gr-ext-installed="" class="vsc-initialized">
+  <canvas id="myCanvas" width="3840" height="2110" style="width: 100%; height: 100%;　"></canvas>
+  <script>
+  //色を選択できるお
+  let color=["#f0e68c",]
+
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  var r=10;
+  var theta = Array(n);
+  canvas.width=screen.availWidth;
+  canvas.height=screen.availHeight;
+  var x0=canvas.width;
+  var y0=canvas.height;
+  var result=canvas.width/3840;
+  var n=3;
+  for (var i = 0; i < n; i++){
+    theta[i]=60*i/3.14;
+  }
+
+
+  function draw() {
+    ctx.beginPath();
+    for(i=n;i>-1;i--){
+      for(var k=0;k<i;k++){
+      ctx.fill();
+      ctx.strokeStyle = color[1];
+      ctx.moveTo(r*Math.sin(theta[i])+x0/2, r*Math.cos(theta[i])+y0/2);
+      ctx.lineTo(r*Math.sin(theta[k])+x0/2, r*Math.cos(theta[k])+y0/2);
+      ctx.stroke();
+        }
+        ctx.closePath();
+        theta[i]+=0.1;
+    }
+  r+=1;
+}
+  setInterval(draw, 10);
+</script>
+</body></html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+body { color: white;
+  background-color: white }
+</style>
+
+  <title>Imony-Dust</title>
+</head>
+<body>
+  <canvas id="myCanvas" width="" height="" style="width: 100%; height: 100%;　"></canvas>
+  <script>
+  //色を選択できるお
+  let color=["#000000",]
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  var r=10;
+  var theta = Array(n);
+  canvas.width=screen.availWidth*4;
+  canvas.height=screen.availHeight*4;
+  var x0=canvas.width;
+  var y0=canvas.height;
+  var result=canvas.width/3840;
+  var theta0=Math.random()*0.5;
+  var n=3;
+  for (var i = 0; i < n; i++){
+    theta[i]=2/3*i*3.1415;
+  }
+
+
+  function draw() {
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+    for(i=n;i>-1;i--){
+      for(var k=0;k<i;k++){
+      ctx.fill();
+      ctx.strokeStyle = color[0];
+      ctx.moveTo(r*Math.sin(theta[i])+x0/2, r*Math.cos(theta[i])+y0/2);
+      ctx.lineTo(r*Math.sin(theta[k])+x0/2, r*Math.cos(theta[k])+y0/2);
+      ctx.stroke();
+      ctx.closePath();
+      }
+
+        theta[i]+=theta0;
+    }
+  r+=10;
+}
+  setInterval(draw, 10);
+</script>
+</body></html>

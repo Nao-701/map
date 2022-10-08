@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+body { color: white;
+  background-color: white }
+</style>
+
+<title>探査アルゴリズム</title>
+</head>
+<body>
+  <canvas id="myCanvas" width="" height="" style="width: 100%; height: 100%;　"></canvas>
+  <script>
+
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  canvas.width=screen.availWidth*2;
+  canvas.height=screen.availHeight*2;
+  var num=2*Math.random()+0.9; //一区間の距離に対してどのくらい許容するのか（値が小さいほうが，広く線を引く）
+  var n=100+Math.floor(Math.random()*2000),j=0;
+  var start=1;
+  var goal=2;
+  let data=Array(n);
+  let connect=Array(n);
+  var length2=n/Math.sqrt(n)*Math.hypot(canvas.width,canvas.height)
+  var length=0,note1=1,note2=start;
+
+  ctx.fillStyle = "black";
+  ctx.font = '50pt Arial';
+  ctx.fillText("gamma:", 0, 80);
+  ctx.fillText(num, 300, 80);
+
+  ctx.fillText("num:", 0, 200);
+  ctx.fillText(n, 300, 200);
+
+  ctx.font = '20pt Arial';
+  ctx.fillText("gammaは現状いる点から次の点の距離と，\n次の点とゴールの距離の扱うスケールの比を表す.", 1200, 80);
+  ctx.fillText("大きいほど，新規に線を引く距離を小さくしようとする.", 1200, 180);
+
+  for (var i = 0; i < n; i++){
+    data[i] = Array(4)
+  }
+
+  for (var i = 0; i < n; i++){
+    data[i][0]=0;
+    data[i][1]=Math.random()*canvas.width;
+    data[i][2]=(Math.random()*0.8+0.2)*canvas.height;
+    data[i][3]=5/Math.sqrt(n*10)*100;
+  }
+  data[1][1]=canvas.width*0.1;
+  data[1][2]=canvas.height*0.3;
+  data[2][1]=canvas.width*0.9;
+  data[2][2]=canvas.height*0.9;
+
+  drawBall();
+
+  function drawBall() {
+    for(i=0;i<n;i++){
+      ctx.beginPath();
+      ctx.arc(data[i][1], data[i][2], data[i][3], 0, Math.PI*2);
+      ctx.fillStyle = "black";
+      if(i==start||i==goal){
+        ctx.arc(data[i][1], data[i][2], data[i][3]*2, 0, Math.PI*2);
+        ctx.fillStyle = "red";
+      }
+      ctx.fill();
+      ctx.closePath();
+    }
+  }
+
+  function draw() {
+
+
+    var l1=100e100000;
+    if(goal!==note2){
+    for(i=0;i<n;i++){
+
+        var l = Math.hypot(data[i][1]-data[note2][1],data[i][2]-data[note2][2])*num
+        +Math.hypot(data[i][1]-data[goal][1],data[i][2]-data[goal][2]);
+        if(data[i][0]==0 && l<l1
+          &&Math.hypot(data[i][1]-data[note2][1],data[i][2]-data[note2][2])< length2
+        &&Math.hypot(data[i][1]-data[goal][1],data[i][2]-data[goal][2])< length2 ){
+          l1=l;
+          note1=i;
+        }
+      }
+    }
+
+
+
+    ctx.beginPath();
+    ctx.lineWidth = 5;
+        ctx.fill();
+        ctx.strokeStyle = "black";
+        ctx.moveTo(data[note1][1], data[note1][2]);
+        ctx.lineTo(data[note2][1], data[note2][2]);
+        ctx.stroke();
+        ctx.closePath();
+
+        note2=note1;
+        data[note1][0]=1;
+  }
+  setInterval(draw, 100);
+</script>
+</body></html>

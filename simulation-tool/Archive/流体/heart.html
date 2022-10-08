@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><style>
+body { color: white;
+  background-color: white }
+</style>
+
+  <title>Mr.Heart</title>
+</head>
+<body>
+  <canvas id="myCanvas" width="1368" height="872" style="width: 100%; height: 100%;">
+  <script>
+  let color=["#000000",]
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  canvas.width=screen.availWidth;
+  canvas.height=screen.availHeight;
+  var x0=canvas.width;
+  var y0=canvas.height;
+  var theta0=Math.random()*0.5;
+  var a=Math.floor(Math.random()*0);
+  var b=0.4;
+  var p=1;
+  var c=0.8;
+  var q=1.2
+  var k=0.5;
+  var d=0.8;
+  var t=0.01;
+  var x;
+  var y;
+
+  function draw() {
+    ctx.beginPath();
+    ctx.lineWidth = 10;
+      ctx.fill();
+      ctx.strokeStyle = color[0];
+      x=a*(1-Math.exp(-p*t*t))/(1+Math.exp(-p*t*t))+c*t*t*t*Math.exp(-q*t*t)*Math.cos(k*t);
+      y=b*(1-Math.exp(-p*t*t))/(1+Math.exp(-p*t*t))+d*t*t*t*Math.exp(-q*t*t)*Math.sin(k*t);
+      ctx.moveTo(x*1000+x0/2, -y*1000+y0/1.2);
+      t=t+0.01;
+      x=a*(1-Math.exp(-p*t*t))/(1+Math.exp(-p*t*t))+c*t*t*t*Math.exp(-q*t*t)*Math.cos(k*t);
+      y=b*(1-Math.exp(-p*t*t))/(1+Math.exp(-p*t*t))+d*t*t*t*Math.exp(-q*t*t)*Math.sin(k*t);
+      ctx.lineTo(x*1000+x0/2, -y*1000+y0/1.2);
+      ctx.stroke();
+      ctx.closePath();
+      if(t>3){
+        t=-Math.abs(t);
+      }
+      if(t<0.01 && t>0){
+        t=0.01;
+        a=a/1.005;
+        b=b/1.005;
+        c=c/1.005;
+        d=d/1.005;
+      }
+    }
+  setInterval(draw, 10);
+</script>
+
+
+</canvas></body></html>

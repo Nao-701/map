@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><style>
+body { color: white;
+  background-color: white }
+</style>
+
+  <title>モンキーハンティング</title>
+</head>
+<body>
+  <canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+  <script>
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+  canvas.width=screen.availWidth;
+  canvas.height=screen.availHeight;
+  width=screen.availWidth;
+  height=screen.availHeight;
+
+  var count=0,g,r,x,y=10**10,x1,y1,vx0,vy0,vx,vy,t,t0,t1,vx1,vy1;
+  g=Math.random()*0.07+0.05,r=4;
+
+  function draw(){
+        drawBall()
+    ctx.fillStyle = "black";
+    ctx.font = '10pt Arial';
+    ctx.fillText("time:", 0, 80);
+    ctx.fillText(t, 0, 110);
+
+    ctx.fillText("gravity:", width*0.5, 80);
+    ctx.fillText(g, width*0.5, 110);
+
+    ctx.fillText("回数:", width*0.8, 80);
+    ctx.fillText(count, width*0.8, 110);
+
+    //ctx.fillText(t1, width*0.4, 50);
+    //ctx.fillText(t0, width*0.8, 50);
+    ctx.fillText("x:", 0, 140);
+    ctx.fillText("y:", width*0.5, 140);
+
+    ctx.fillText(x, 0, 170);
+    ctx.fillText(-y+height, width*0.5, 170);
+
+if(y>height*1.2){
+    first()
+    count++;
+}
+    vy0-=g;
+    x+=vx0;
+    y-=vy0;
+
+if(t1<t && t0-1>t){
+  vy1-=g;
+  x1+=vx1;
+  y1-=vy1;
+  ctx.fillText("x':", 0, 200);
+  ctx.fillText("y':", width*0.5, 200);
+
+  ctx.fillText(x1, 0, 230);
+  ctx.fillText(-y1+height, width*0.5, 230);
+  ctx.font = '40pt Arial';
+  ctx.fillStyle = "red";
+  ctx.fillText("右下から発射されました", width*0.5-220, height*0.4);
+}
+else if(t0-1<t ){
+  vy1-=g;
+  y1-=vy1;
+  vx0=0;
+  vx1=0;
+  ctx.fillText("x':", 0, 200);
+  ctx.fillText("y':", width*0.5, 200);
+
+  ctx.fillText(x1, 0, 230);
+  ctx.fillText(-y1+height, width*0.5, 230);
+  ctx.font = '40pt Arial';
+  ctx.fillStyle = "orange";
+  ctx.fillText("衝突！！", width*0.5-80, height*0.4);
+}
+else{
+  ctx.font = '40pt Arial';
+    ctx.fillStyle = "green";
+    ctx.fillText("左下から発射されました", width*0.5-220, height*0.4);
+}
+    t++;
+    ctx.font = '20pt Arial';
+    ctx.fillStyle = "black";
+    ctx.fillText("絶対にボールを奥までやらないシステム", width*0.5-180, 30);
+  }
+
+  function first(){
+    x=0;
+    y=height;
+    x1=canvas.width;
+    y1=height;
+    vy0=(Math.random()+1)/2*(Math.sqrt(2*g*height));
+    vx0=(Math.random()+4)/5 *(width/(2*vy0/g));
+    t=0;
+    t0=(Math.random()+7)/10 * 2*vy0/g;//あたる
+    t1=0.4 *t0;//出発
+    vx1= (x-x1+vx0*t0)/(t0-t1);
+    vy1= (y-y1+vy0*t0+g/2*(-2*t0*t1+t1*t1))/(t0-t1);
+  }
+
+  function drawBall() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+      ctx.arc(x, y, r*2, 0, Math.PI*2);
+      ctx.arc(x1, y1, r, 0, Math.PI*2);
+      ctx.fillStyle = "#0095DD";
+      ctx.fill();
+      ctx.closePath();
+    }
+
+  function draw01() {
+    ctx.beginPath();
+    ctx.lineWidth = 1;
+      ctx.fill();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, 0);
+      ctx.stroke();
+      ctx.closePath();
+}
+  setInterval(draw, 10);
+</script>
+
+
+</canvas></body></html>

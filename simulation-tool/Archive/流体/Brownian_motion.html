@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Imony</title>
+</head>
+<body>
+  <canvas  id="myCanvas" width="3840" height="2160" style="width: 100%; height: 100%;"></canvas>
+  <script>
+
+  var randlength=9;//動きの激しさを選択できるお
+  var n=1000;//ここで点の数を選択できるお！
+  var distance=15;//ぶつかり判定の距離を選択できるドン
+  //色を選択できるお
+  let color=[
+    "#0095DD","#f0e68c","#90ee90","#c71585",
+    "#4682b4","#f0312f","#008080","#ff7f50",
+    "#3cb371","#db7093","#902d9f","#daa520",
+    "#0095DD","#f0e68c","#90ee90","#c71585",
+  ]
+
+  
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  var x = Array(n);
+  var y = Array(n);
+  var x0=canvas.width/2;
+  var y0=canvas.height/2;
+  for (var i = 0; i < n; i++){
+    x[i]=Math.floor(Math.random() * (2*x0)) ;
+    y[i]=Math.floor(Math.random() * (2*y0)) ;
+  }
+
+  function drawBall() {
+    for(var i=0;i<n+1;i++){
+      ctx.beginPath();
+      ctx.arc(x[i], y[i], 10, 0, Math.PI*2);
+      ctx.fillStyle = color[i%16];
+      ctx.fill();
+      ctx.closePath();
+    }
+  }
+  function draw() {
+    drawBall();
+    for(i=0;i<n+1;i++){
+      xi=x[i] + Math.floor(Math.random() * (2*randlength+1))  -randlength;
+      yi=y[i] + Math.floor(Math.random() * (2*randlength+1))  -randlength;
+      if(0<xi&&0<yi&&xi<canvas.width&&yi<canvas.height){
+        x[i]=xi;
+        y[i]=yi;
+      }
+      for(var k=0;k<n+1;k++){
+        if(i!=k && Math.abs(x[i]-x[k])<distance && Math.abs(y[i]-y[k])<distance){
+          x[i]=-1000;
+          x[k]=-1000;
+        }
+      }
+    }
+  }
+  setInterval(draw, 0);
+</script>
+</body>
+</html>

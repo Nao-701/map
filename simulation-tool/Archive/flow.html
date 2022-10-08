@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html><head><style>
+	body {background-color: black;}
+	</style>
+
+		<meta charset="utf-8" />
+		<link rel="icon" href="https://static.xx.fbcdn.net/rsrc.php/yA/r/el4uwbESChI.ico">
+
+		<title>imo-stagram</title>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="1000" height="1000" >
+		<script>
+		var pp=0.1;
+		var switch1=1;
+		var fps=60;
+		var n=5000;
+		var m=10;
+		var strong=20;
+		var radium=1;
+		var radium_vortex=0;
+
+		let color=[
+			"#0095DD","#f0e68c","#90ee90","#c71585",
+			"#4682b4","#f0312f","#008080","#ff6c36",
+			"#3cb371","#db7093","#902d9f","#daa520",
+			"#00E5DD","#f0e68c","#90ee90","#c71585",
+		]
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+
+		canvas.width=1000;
+		canvas.height=1000;
+		var x0=canvas.width;
+		var y0=canvas.height;
+
+		var margin=100;
+		var xx,yy,vx,vy,i,j,distance;
+		//x0*y0/margin^2;
+		var x = Array(n);
+		var y = Array(n);
+		//Math.floor(Math.random()*(5))+5;
+		var x_vortex = Array(m);
+		var y_vortex = Array(m);
+		var Gammma = Array(m);
+
+		for (i = 0; i < n; i++){
+			x[i]=Math.random()*(x0*pp/10)+x0*(0.5-pp/20) ;
+			y[i]=Math.random()*(y0*pp/10)+y0*(0.5-pp/20) ;
+		}
+
+		for (i = 0; i < m; i++){
+			x_vortex[i]=Math.random()*(x0*pp)+x0*(0.5-pp/2) ;
+			y_vortex[i]=Math.random()*(y0*pp)+y0*(0.5-pp/2) ;
+			Gammma[i]=(Math.floor(Math.random()*(100))-50 )*strong;
+		}
+
+		function drawBall() {
+			for(i=0;i<m;i++){
+				ctx.beginPath();
+				ctx.arc(x_vortex[i], y_vortex[i], radium_vortex, 0, Math.PI*2);
+				ctx.fillStyle = color[1];
+				ctx.fill();
+				ctx.closePath();
+		}
+
+			for(i=0;i<n;i++){
+				ctx.beginPath();
+				ctx.arc(x[i], y[i], radium, 0, Math.PI*2);
+				ctx.fillStyle = color[i%16];
+				ctx.fill();
+				ctx.closePath();
+		}
+	}
+		function draw() {
+			ctx.fillStyle = 'rgb(0,0,0)';
+			ctx.fillRect(0, 0, x0*switch1, y0*switch1);
+			drawBall();
+			for(i=0;i<n;i++){
+				vx=0;
+				vy=0;
+					for(j=0;j<m;j++){
+						xx = x[i]-x_vortex[j];
+						yy = y[i]-y_vortex[j];
+						distance = xx*xx + yy*yy;
+						vx-=Gammma[j]*yy/distance;
+						vy+=Gammma[j]*xx/distance;
+					}
+				x[i]+=vx;
+				y[i]+=vy;
+			}
+
+			for(i=0;i<m;i++){
+				vx=0;
+				vy=0;
+					for(j=0;j<m;j++){
+						if(i!=j){
+						xx = x_vortex[i]-x_vortex[j];
+						yy = y_vortex[i]-y_vortex[j];
+						distance = xx*xx + yy*yy;
+						vx-=Gammma[j]*yy/distance;
+						vy+=Gammma[j]*xx/distance;
+					}
+				}
+
+				x_vortex[i]+=vx;
+				y_vortex[i]+=vy;
+			}
+
+		}
+		setInterval(draw, 1000 / fps);
+	</script>
+
+
+</canvas></body></html>

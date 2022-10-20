@@ -2,7 +2,7 @@
 
 [こちら](https://naohiro701.github.io/main/electricity/main.html)をご覧ください．
 
-""
+```
 function doGet() {
   Logger.log(Session.getActiveUser());
   const htmlOutput = HtmlService.createTemplateFromFile("index").evaluate();
@@ -25,9 +25,9 @@ function getData() {
   return values;
 }
 
-""
+```
 
-""
+```
 
 <!DOCTYPE html>
 <html>
@@ -101,9 +101,9 @@ output.append('</ol><hr>');
 </body>
 </html>
 
-""
+```
 
-""
+```
 
 //以下フッター
 
@@ -149,9 +149,9 @@ output.append('</ol><hr>');
 }
 
 
-""
+```
 
-""
+```
 
 <script>
   // a タグの href 属性に記述された URL を、新規ウィンドウで開く関数
@@ -175,4 +175,4 @@ tex2jax: { inlineMath: [['$','$'], ["</br>(","</br>)"]] } });
 
 
 
-""
+```

@@ -1,8 +1,8 @@
 ## Google FormをベースにURLをまとめるサイトを作る
 
-[こちら](https://naohiro701.github.io/main/electricity/main.html)をご覧ください．
+[こちら](https://script.google.com/macros/s/AKfycbyCSELylp2itm2oRrfi84WOv12c0c2PgzflOHQdWQo/exec)をご覧ください．
 
-#### main.gs
+### main.gs
 スプレッドシートからGASへの接続を行います．
 ```
 function doGet() {
@@ -29,7 +29,7 @@ function getData() {
 
 ```
 
-#### index.html
+### index.html
 
 ```
 
@@ -104,7 +104,7 @@ output.append('</ol><hr>');
 </html>
 
 ```
-#### fotter.html
+### fotter.html
 
 ```
 
@@ -154,7 +154,8 @@ output.append('</ol><hr>');
 
 ```
 
-#### script.html
+### script.html
+数式に対応させる予定でした.
 
 ```
 

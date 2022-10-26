@@ -78,7 +78,8 @@ function my_function(){
 30分毎に１回程度実行すればよい．
 
 ### 需要実績を3Dで可視化する
-'''
+
+```
 
 import plotly.graph_objects as go
 import numpy as np
@@ -126,4 +127,4 @@ for reg in REGION_name:
     # fig.show()
     fig.write_html("a/elect_demand_dust_%s.html"% reg)
 
-'''
+```

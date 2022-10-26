@@ -42,4 +42,4 @@ for reg in REGION_name:
     # tight layout
     fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
     # fig.show()
-    fig.write_html("a/elect_demand_dust_%s.html"% reg)
+    fig.write_html("3D/elect_demand_dust_%s.html"% reg)

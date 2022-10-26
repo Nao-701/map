@@ -126,5 +126,4 @@ for reg in REGION_name:
     # fig.show()
     fig.write_html("a/elect_demand_dust_%s.html"% reg)
 
-
 '''

@@ -180,3 +180,150 @@ tex2jax: { inlineMath: [['$','$'], ["</br>(","</br>)"]] } });
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 ```
+
+
+## GASをベースに論文のRSSを用いて公式LINEより送信する
+
+### main.gs
+スプレッドシートからGASへの接続を行います．
+
+```
+
+//TOKENS
+CHANNEL_ACCESS_TOKEN = ""
+let sheetId = ''
+let sheet = SpreadsheetApp.openById(sheetId).getActiveSheet()
+var API_URL = "https://api.line.me/v2/bot/message/reply"
+var REPLY_TOKEN
+var STAT_ID
+
+```
+```
+function GET_RSS() {
+
+  var Rsheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("urls");
+  var Rrow = Rsheet.getLastRow();
+
+  if (Rrow) {
+    var rssLists = Rsheet.getRange(1, 1, Rrow, 3).getValues();
+    // フィードURL
+
+    // ジャーナルごとでループさせる
+    for (var jurnal_number = 0 ; jurnal_number < rssLists.length; jurnal_number++) {
+
+      paper_name = rssLists[jurnal_number][0]
+      my_rss = rssLists[jurnal_number][1]
+      
+      // フィードを取得
+      var rss_data = UrlFetchApp.fetch(my_rss);
+      // XMLをパース
+      var rss_xml = XmlService.parse(rss_data.getContentText());
+      // 各データの要素を取得
+      var rss_entries = rss_xml.getRootElement().getChildren('channel')[0].getChildren('item');
+      
+      var title = []
+      var link = []
+
+      for(var paper_number = 0; paper_number < rss_entries.length; paper_number++){
+        title[paper_number] = rss_entries[paper_number].getChildText('title')
+        link[paper_number] = rss_entries[paper_number].getChildText('link')
+        // description = rss_entries[paper_number].getChildText('description')
+      }
+      
+      // CHECK してから SEND する関数へ送る．ジャーナルごとにLISTを送る．
+      
+      // Logger.log(title);
+      check(paper_name, title, link)
+    }
+  }
+}
+
+```
+
+```
+
+// キーワード検索
+function check(paper_name,title, link){
+
+  let sheet_keywords = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("keyword");
+  let keywords = sheet_keywords.getDataRange().getValues();
+
+  var count = 0
+  var interesting_title = []
+  var interesting_link = []
+
+  for(var num = 0; num < title.length; num++){
+
+    // Logger.log(title[num])
+
+    if (keywords.some(function(word){return (title[num].indexOf(word) !== -1);})) {
+
+      // interesting_title[count] = title[num]
+      // interesting_link[count] = link[num]
+
+      var array = [title[num],link[num]]
+      interesting_link[count] = array.join("\n ");
+      
+      count = count + 1; 
+    }
+    // いざ．送信！！
+  }
+    // Logger.log(interesting_title);
+    // send(paper_name, interesting_title,interesting_link); 
+    send(paper_name, interesting_link); 
+}
+
+```
+
+```
+
+function send(paper_name,interesting_link) {
+  // 送信する文章を一括で作成する．
+  let message_texts = interesting_link.join("\n \n  ー－－－－－－－－－－－－－－ \n\n");
+  Logger.log(message_texts.length);
+
+  let message = {
+      "messages": [
+        {
+        'type': 'text',
+        'text': "⚡" + paper_name+"⚡\n"
+      }]
+    }
+  if (message_texts.length == 0){
+    message = {
+      "messages": [
+        {
+        'type': 'text',
+        'text': paper_name+"には入力されたキーワードを含む論文がありませんでした．"
+      }]
+    }
+  }
+  else if (message_texts.length<5000){
+    message = {
+      "messages": [
+        {
+        'type': 'text',
+        'text': "⚡" + paper_name+"⚡\n \nー－－－－－－－－－－－－－－\n\n" + message_texts
+      }]
+    }
+  } else{
+    message = {
+      "messages": [
+        {
+        'type': 'text',
+        'text':  paper_name+"には対象の論文がありすぎて，送れませんでした．" 
+      }]
+    }
+  }
+
+  UrlFetchApp.fetch('https://api.line.me/v2/bot/message/broadcast', {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + CHANNEL_ACCESS_TOKEN,
+    },
+    payload: JSON.stringify(message),
+  });
+}
+
+```

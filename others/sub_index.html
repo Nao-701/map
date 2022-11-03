@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>TOP page</title>
+	<meta name="description"  content="ゴミのようなサイトです">
+</head>
+<body>
+	<canvas id="myCanvas" style="width: 100%; height: 100%;">
+	</canvas>
+	<h1>My  GitHub  Pages</h1>
+	<div class="menu">
+		<div class="menu-con"><a href="https://naohiro701.github.io/main/simulation-tool/main.html" target="_blank" rel="norefferrer">Simulation</a></div>
+		<div class="menu-con"><a href="https://naohiro701.github.io/main/others/tohoku.html" target="_blank" rel="norefferrer">Tohoku</a></div>
+		<div class="menu-con"><a href="https://naohiro701.github.io/main/electricity/main.html" target="_blank" rel="norefferrer">MAIN</a></div>
+		<div class="menu-con"><a href="https://github.com/naohiro701/main" target="_blank" rel="norefferrer">GitHub</a></div>
+		<div class="menu-con"><a href="https://naohiro701.github.io/main/index.html">HOME</a></div>
+	</div>
+</body>
+	
+	
+<script>
+var randlength=9;//動きの激しさを選択できる
+var max_n=1000;//個数の最大数
+var distance;
+var v0=5;
+var e=Math.random()*(0.501)+0.5;
+var Max_mass=Math.floor(Math.random()*(5)+1)*30;
+var Min_mass=10;
+//色を選択
+let color=[
+"#0095DD","#f0e68c","#90ee90","#c71585",
+"#4682b4","#f0312f","#008080","#ff7f50",
+"#3cb371","#db7093","#902d9f","#daa520",
+"#0095DD","#f0e68c","#90ee90","#c71585",
+]
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var x = Array(n);
+var y = Array(n);
+var vx = Array(n);
+var vy = Array(n);
+var m = Array(n);
+canvas.width=screen.availWidth;
+canvas.height=screen.availHeight*1.1;
+var x0=canvas.width/2;
+var y0=canvas.height/2;
+var result=canvas.width/3840;
+var n=Math.floor(Math.random()*(max_n)*result)+Min_mass;
+for (var i = 0; i < n; i++){
+	x[i]=Math.floor(Math.random()*(2*x0)) ;
+	y[i]=Math.floor(Math.random()*(2*y0)) ;
+	vx[i]=(Math.floor(Math.random()*(2*v0+1))-v0) ;
+	vy[i]=(Math.floor(Math.random()*(2*v0+1))-v0) ;
+	m[i]= Math.floor(Math.random()*(Max_mass-Min_mass)*result)+Min_mass ;
+}
+
+function drawBall() {
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	for(var i=0;i<n+1;i++){
+		ctx.beginPath();
+		ctx.arc(x[i], y[i], Math.sqrt(m[i])*3, 0, Math.PI*2);
+		ctx.fillStyle = color[i%16];
+		ctx.fill();
+		ctx.closePath();
+	}
+}
+
+function draw() {
+	drawBall();
+	for(i=n;i>-1;i--){
+		for(var k=0;k<i;k++){
+			if(i!=k){
+				distance = (Math.sqrt(m[i])+Math.sqrt(m[k]))*3;
+				if( Math.hypot(x[i]+3*vx[i]-x[k]-3*vx[k],y[i]+3*vy[i]-y[k]-3*vy[k]) < distance) {
+					var vix=vx[i]-m[k]*(1+e)*(vx[i]-vx[k])/(m[i]+m[k]);
+					var viy=vy[i]-m[k]*(1+e)*(vy[i]-vy[k])/(m[i]+m[k]);
+					var vkx=vx[k]+m[i]*(1+e)*(vx[i]-vx[k])/(m[i]+m[k]);
+					var vky=vy[k]+m[i]*(1+e)*(vy[i]-vy[k])/(m[i]+m[k]);
+					vx[i]=vix;
+					vy[i]=viy;
+					vx[k]=vkx;
+					vy[k]=vky;
+				}
+			}
+		}
+		if(0>=x[i]-Math.sqrt(m[i])*3){
+			vx[i]=Math.abs(vx[i]);
+		}
+
+		if(x[i]+Math.sqrt(m[i])*3>=canvas.width){
+			vx[i]=-Math.abs(vx[i]);
+		}
+
+		if(0>=y[i]-Math.sqrt(m[i])*3){
+			vy[i]=Math.abs(vy[i]);
+		}
+		if(y[i]+Math.sqrt(m[i])*3>=canvas.height){
+			vy[i]=-Math.abs(vy[i]);
+		}
+		x[i]+=vx[i];
+		y[i]+=vy[i];
+	}
+}
+setInterval(draw, 0);
+
+var open = true;
+
+function Drop(n) {
+var i;
+if (open == false) {
+	for (i = n; i < 5; i++) {
+		Drp(i)
+	}
+	open = true
+} else if (open == true) {
+	for (i = n; i < 5; i++) {
+		Cls(i)
+	}
+	open = false
+}
+}
+
+function Drp(n) {
+var elem = document.getElementsByClassName("menu-con")[n];
+var pos = -1 * window.innerHeight - n * 100;
+var id = setInterval(frame, 5);
+
+function frame() {
+	if (pos >= -10) {
+		clearInterval(id);
+		elem.style.top = 0 + 'px';
+		} 
+	else {
+		pos += 10;
+		elem.style.top = pos + 'px';
+		}
+	}
+}
+</script>
+
+
+<style>
+body {
+	color: white;
+	background-color: black;
+	font-family: cursive;
+}
+a{
+	text-decoration: none;
+}
+h1 {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-size: 5em;
+	-ms-transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+	transform: translate(-50%,-50%);
+	margin:0;
+	padding:0;
+}
+
+.menu-icon {width: 50px;height: 50px;position: fixed;top: 0;right: 0;margin: 10px 15px;transform:scale(0.8);padding: 0;cursor: pointer;z-index:20}
+.menu-bar {width: 50px;height: 5px;background: rgb(190,190,190);position: absolute;transition: all 0.3s;}
+
+.menu-icon.hover .menu-bar1 {-webkit-transform: rotate(45deg) scaleX(0.7);margin-top: 22px;}
+.menu-icon.hover .menu-bar2 {opacity: 0}
+.menu-icon.hover .menu-bar3 {-webkit-transform: rotate(-45deg) scaleX(0.7);margin-top: 22px;}
+
+.menu {width: 100%;height: 100%;display: -webkit-flex;display: flex;-webkit-flex-wrap: wrap;flex-wrap: wrap;}
+.menu-con {-webkit-flex-grow: 1;flex-basis: 0;flex-grow: 1;display: -webkit-flex;display: flex;-webkit-justify-content:space-around;position:relative;top:-100%;transition:all 0.5s}
+.menu-con a:before {content: ""; display: block;position:absolute;top:0;left:0;z-index:1;width:100%;height: 100%;opacity: 1;background: rgba(0,0,0,0);-webkit-transition: all 0.5s;transition: all 0.5s;}
+.menu-con:hover a:before {background: rgba(0,0,0,0.2)}
+.menu-con a {height:20px;-webkit-align-self:center;color:white;font-size:25px;z-index:2;cursor:pointer}
+@media screen and (max-width: 600px) {.menu-con {min-width:50%}}
+@media screen and (max-width: 350px) {.menu-con {min-width:100%}}
+</style>
+</html>

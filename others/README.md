@@ -184,11 +184,10 @@ tex2jax: { inlineMath: [['$','$'], ["</br>(","</br>)"]] } });
 
 ## GASをベースに論文のRSSを用いて公式LINEより送信する
 
-### main.gs
-スプレッドシートからGASへの接続を行います．
+### 
+スプレッドシートからGASへの接続を行い，公式LINEでBroadcastします．
 
 ```
-
 //TOKENS
 CHANNEL_ACCESS_TOKEN = ""
 let sheetId = ''
@@ -196,11 +195,10 @@ let sheet = SpreadsheetApp.openById(sheetId).getActiveSheet()
 var API_URL = "https://api.line.me/v2/bot/message/reply"
 var REPLY_TOKEN
 var STAT_ID
-
 ```
 ```
+//トリガーで実行する，RSSを取得してくる関数
 function GET_RSS() {
-
   var Rsheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("urls");
   var Rrow = Rsheet.getLastRow();
 
@@ -241,7 +239,6 @@ function GET_RSS() {
 ```
 
 ```
-
 // キーワード検索
 function check(paper_name,title, link){
 
@@ -266,19 +263,17 @@ function check(paper_name,title, link){
       
       count = count + 1; 
     }
-    // いざ．送信！！
+    // 送信！！
   }
     // Logger.log(interesting_title);
     // send(paper_name, interesting_title,interesting_link); 
     send(paper_name, interesting_link); 
 }
-
 ```
 
 ```
-
+// 送信する文章を一括で作成する．
 function send(paper_name,interesting_link) {
-  // 送信する文章を一括で作成する．
   let message_texts = interesting_link.join("\n \n  ー－－－－－－－－－－－－－－ \n\n");
   Logger.log(message_texts.length);
 
@@ -325,5 +320,4 @@ function send(paper_name,interesting_link) {
     payload: JSON.stringify(message),
   });
 }
-
 ```

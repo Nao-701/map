@@ -1,47 +1,78 @@
 <html lang="ja">
-<meta>
-<head>
-  <title>中田研究室 - 文章添削ツール</title>
-</head>
-<h2>中田研究室 - 文章添削ツール</h2>
-<textarea cols="100" rows="10" wrap=”soft” id="inputText"></textarea>
-<br>
-<button onclick="checkText()">Check</button>
-<div id="warning" style="display:none">NG</div>
-<p>Chrome専用です <a href="https://github.com/naohiro701/naohiro701.github.io/blob/main/others/checker.html">コード修正はこちらから</a></p>
+  <meta>
+  <head>
+    <title>中田研究室 - 文章添削ツール</title>
+  </head>
+  <h2>中田研究室 - 文章添削ツール</h2>
+  <textarea cols="100" rows="10" wrap=”soft” id="inputText"></textarea>
+  <br>
+  <button onclick="checkText()">Check</button>
+  <br>
+  <div id="warning" style="display:none">添削しました↓</div>
+  <p id="test"></p>
+  <p>
+    <a href="https://github.com/naohiro701/naohiro701.github.io/blob/main/others/checker.html"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"  class="bi bi-github" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/ ></svg>
+    </a>
+  </p>
 </html>
 
 <script type="text/javascript">
-function checkText() {
-  document.getElementById("warning").style.display = "none";
-  const text = document.getElementById("inputText").value;
-  const itr = new Intl.v8BreakIterator(['ja-jp'], { type: 'word'});
-  itr.adoptText(text);
-  let pos = itr.first();
+  //修正後の文字
+  let checked_text = document.getElementById('test').innerHTML;
 
+  function checkText() {
+    document.getElementById("warning").style.display = "none";
+    const text = document.getElementById("inputText").value;
+    const itr = new Intl.v8BreakIterator(['ja-jp'], { type: 'word'});
+    itr.adoptText(text);
+    let pos = itr.first();
 
-  while(pos != -1) {
-    const nextPos = itr.next();
-    if(nextPos === -1) { break; }
-    const str = text.slice(pos, nextPos);
-    check(str)
-    pos = nextPos;
-    console.log(str)
+    //リセット
+    checked_text = ""
+
+    while(pos != -1) {
+      const nextPos = itr.next();
+      if(nextPos === -1) { break; }
+      const str = text.slice(pos, nextPos);
+      checked_text = checked_text + check(str)
+      pos = nextPos;
+      console.log(str)
+    }
+    document.getElementById('test').innerHTML = checked_text
   }
-}
-function check(str){
-  //漢字とかなの使い分け
-  const forbiddenWords = ["良い", "し易い", "内には", "事は", "する迄", "する訳", "と言う", "と言った", "時", "方", "予め", "或いは", "恐らく", "主な", "主に",
-  "且つ", "極めて", "様々", "更に", "次第に", "従って", "直ぐに", "既に", "即ち", "全て", "但し", "例えば", "丁度", "付く", "出来る",
-  "共に", "取る", "採る", "捕る", "何故", "始めに", "初めに", "果たして", "遥かに", "ひきおこす", "殆ど", "又", "全く", "目指す", "勿論",
-  "専ら", "わるい", "分かる", "結び付く", "見出す", "みいだす", "よぶ", "充分", "ふるまう", "振舞う", "なりたつ", "動機付け", "もちいる"];
-for (const word of forbiddenWords) {
-  //  if (str.includes(word)) { //含む場合
-  if (str === word) { // 一致する場合
-    document.getElementById("warning").style.display = "block";
-    alert("「"+str+'」を修正してください')
-    return;
+
+  function check(str){
+    //漢字とかなの使い分け
+    //連想配列
+    const forbiddenWords = {
+      "良い":"よい", "し易い":"しやすい", "内には":"うちには",
+      "事は":"ことは", "する迄":"するまで", "する訳":"するわけ",
+      "と言う":"という", "と言った":"といった", "時":"とき",
+      "方":"ほう", "予め":"あらかじめ", "或いは":"あるいは",
+      "恐らく":"おそらく", "主な":"おもな", "主に":"おもに",
+      "且つ":"かつ", "極めて":"きわめて", "様々":"さまざま",
+      "更に":"さらに", "次第に":"しだいに", "従って":"したがって", "直ぐに":"すぐに",
+      "既に":"すでに", "即ち":"すなわち", "全て":"すべて",
+      "但し":"ただし", "例えば":"たとえば", "丁度":"ちょうど",
+      "付く":"つく", "出来る":"できる", "共に":"ともに",
+      "取る":"とる", "採る":"とる", "捕る":"とる",
+      "何故":"なぜ", "始めに":"はじめに", "初めに":"はじめに",
+      "果たして":"はたして", "遥かに":"はるかに", "ひきおこす":"引き起こす",
+      "殆ど":"ほとんど", "又":"また", "全く":"まったく", "目指す":"めざす", "勿論":"もちろん",
+      "専ら":"もっぱら", "わるい":"悪い", "分かる":"わかる",
+      "結び付く":"結びつく", "見出す":"見い出す", "みいだす":"見い出す",
+      "よぶ":"呼ぶ", "充分":"十分", "ふるまう":"振る舞う",
+      "振舞う":"振る舞う", "なりたつ":"成り立つ", "動機付け":"動機づけ",
+      "もちいる":"用いる"
+    };
+  for (const word of Object.keys(forbiddenWords)) {
+    if (str === word) { // 一致する場合
+      document.getElementById("warning").style.display = "block";
+      alert("「"+str+'」を修正してください')
+      return '<span style="color:#ff00ff">' + forbiddenWords[str] + "</span>";
+      }
+    }
+    return str;
   }
-}
-}
 </script>
+

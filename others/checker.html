@@ -1,0 +1,51 @@
+<html lang="ja">
+<meta>
+<head>
+  <title>中田研究室 - 文章添削ツール</title>
+</head>
+<h2>中田研究室 - 文章添削ツール</h2>
+<textarea cols="100" rows="10" wrap=”soft” id="inputText"></textarea>
+<br>
+<button onclick="checkText()">Check</button>
+<div id="warning" style="display:none">NG</div>
+<p>直井作成  Chrome専用です<p>
+  </html>
+
+  <script type="text/javascript">
+    function checkText() {
+      document.getElementById("warning").style.display = "none";
+      const text = document.getElementById("inputText").value;
+      const itr = new Intl.v8BreakIterator(['ja-jp'], { type: 'word'});
+      itr.adoptText(text);
+      let pos = itr.first();
+
+
+      while(pos != -1) {
+        const nextPos = itr.next();
+        if(nextPos === -1) { break; }
+        const str = text.slice(pos, nextPos);
+        check(str)
+        pos = nextPos;
+        console.log(str)
+      }
+    }
+
+    function check(str){
+      //漢字とかなの使い分け
+      const forbiddenWords = ["良い", "し易い", "する内には", "する事は", "する迄", "する訳", "と言う", "時", "方", "予め", "或いは", "恐らく", "主な", "主に",
+      "且つ", "極めて", "様々", "更に", "次第に", "従って", "直ぐに", "既に", "即ち", "全て", "但し", "例えば", "丁度", "付く", "出来る",
+      "共に", "取る", "採る", "捕る", "何故", "始めに", "初めに"
+      ];
+      for (const word of forbiddenWords) {
+        //  if (str.includes(word)) { //含む場合
+        if (str === word) { // 一致する場合
+          document.getElementById("warning").style.display = "block";
+          alert("「"+str+'」をひらがなに修正してください')
+          return;
+        }
+      }
+
+    }
+
+
+  </script>

@@ -10,8 +10,8 @@
         function vr_function() {
             window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
             var recognition = new webkitSpeechRecognition();
-            recognition.lang = 'ja';
-            recognition.interimResults = true;
+            recognition.lang = 'en';
+            recognition.interimResults = true; //途中での表示するようにする．
             recognition.continuous = true;
 
             recognition.onsoundstart = function() {

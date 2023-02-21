@@ -1,47 +1,50 @@
 <html>
-<head>
-<meta charset="UTF-8" />
-<title>Web Speech API</title>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script>
-window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
-var recognition = new webkitSpeechRecognition();
-recognition.lang = 'en';
-recognition.interimResults = true;
-recognition.continuous = true;
+    <head>
+        <meta charset="UTF-8" />
+        <title>Web Speech API</title>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
-// 録音終了時トリガー
-recognition.addEventListener('result', function(event){
-    var text = event.results.item(0).item(0).transcript;
-    document.getElementById('result_text').innerHTML = text
-    //console.log(text);
-    translate(text)
-}, false);
+        <script>
+            var sourceLang = 'en';
+            var targetLang = 'ja';
 
-// 録音開始
+            window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
+            var recognition = new webkitSpeechRecognition();
+                recognition.lang = sourceLang
+                recognition.interimResults = true;
+                recognition.continuous = true;
 
-function record()
-{
-    recognition.start();
-}
+            // 録音終了時トリガー
+            recognition.addEventListener('result', function(event){
+                var text = event.results.item(0).item(0).transcript;
+                for(var i = 1; i < event.results.length; i++){
+                    text = text + "．<br>" + event.results.item(i).item(0).transcript;}
+                document.getElementById('result_text').innerHTML = text
+                translate(text,sourceLang,targetLang)
+            }, false);
 
-function translate(sourceText){
-var sourceLang = 'en';
-var targetLang = 'ja';
-var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="+ sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText);
-//console.log(url);
+            // 録音開始
+            function record(){
+                recognition.start();}
 
-$.getJSON(url, function(data) {
-    document.getElementById('result_translate_text').innerHTML = data[0][0][0]
-    });
-}
-</script>
-</head>
+            function translate(sourceText,from,to){
+            var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="+ from + "&tl=" + to + "&dt=t&q=" + encodeURI(sourceText);
+                $.getJSON(url, function(data) {
+                    console.log(data[0].length)
+                    text_en = data[0][0][0]
+                    for(var i = 1; i < data[0].length; i++){
+                        text_en = text_en +  data[0][i][0]
+                    }
+                    document.getElementById('result_translate_text').innerHTML = text_en
+                    }
+                );
+            }
+        </script>
+    </head>
 
-<body onload="record();">
-
-<p id="result_text"></p>
-<p id="result_translate_text"></p>
-<br />
-</body>
+    <body onload="record();">
+        <p id="result_text"></p>
+        <p id="result_translate_text"></p>
+        <br/>
+    </body>
 </html>

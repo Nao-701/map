@@ -16,14 +16,15 @@
 
             // 録音終了時トリガー
             recognition.addEventListener('result', function(event){
+                content_length = event.results.length;
                 
                 // 文章が1つしかない場合
-                if(event.results.length === 1){
+                if(1 === content_length){
                     var text = event.results.item(0).item(0).transcript;}
                 else{
-                    var text = event.results.item(0).item(0).transcript;
-                    for(var i = event.results.length-2; i < event.results.length; i++){
-                        text = text + "．<br>" + event.results.item(i).item(0).transcript;}}
+                    var text = event.results.item(content_length-2).item(0).transcript + event.results.item(content_length-1).item(0).transcript
+                    //for(var i = event.results.length-2; i < event.results.length; i++){
+                    //  text = text + "．<br>" + event.results.item(i).item(0).transcript;}}
                 
                 document.getElementById('result_text').innerHTML = text
                 translate(text,sourceLang,targetLang)}, 

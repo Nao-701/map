@@ -5,9 +5,12 @@
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
         <script>
-            var sourceLang = 'en';
-            var targetLang = 'ja';
-
+            // 初期設定
+            var sourceLang = "en";
+            var targetLang = "ja";
+            var text = "start"; 
+            
+            // WEBKITの設定
             window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
             var recognition = new webkitSpeechRecognition();
                 recognition.lang = sourceLang
@@ -17,16 +20,14 @@
             // 録音終了時トリガー
             recognition.addEventListener('result', function(event){
                 content_length = event.results.length;
+                console.log(content_length)
                 
-                // 文章が1つしかない場合
+                // 文章が1つしかない場合とそれ以外
                 if(1 === content_length){
                     var text = event.results.item(0).item(0).transcript;}
                 else{
                     var text = event.results.item(content_length-2).item(0).transcript 
-                        + event.results.item(content_length-1).item(0).transcript}
-                    //for(var i = event.results.length-2; i < event.results.length; i++){
-                    //  text = text + "．<br>" + event.results.item(i).item(0).transcript;}}
-                
+                                + event.results.item(content_length-1).item(0).transcript}
                 document.getElementById('result_text').innerHTML = text
                 translate(text,sourceLang,targetLang)}, false);
 
@@ -34,14 +35,13 @@
             function record(){
                 recognition.start();}
 
+            // 翻訳をする関数
             function translate(sourceText,from,to){
             var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="+ from + "&tl=" + to + "&dt=t&q=" + encodeURI(sourceText);
                 $.getJSON(url, function(data) {
-                    console.log(data[0].length)
                     text_en = data[0][0][0]
                     for(var i = 1; i < data[0].length; i++){
-                        text_en = text_en +  data[0][i][0]
-                    }
+                        text_en = text_en +  data[0][i][0]}
                     document.getElementById('result_translate_text').innerHTML = text_en
                     }
                 );

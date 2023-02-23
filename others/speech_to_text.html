@@ -16,18 +16,18 @@
 
             // 録音終了時トリガー
             recognition.addEventListener('result', function(event){
-                var text = event.results.item(0).item(0).transcript;
+                
                 // 文章が1つしかない場合
                 if(event.results.length === 1){
-                    text = text + "．<br>" + event.results.item(0).item(0).transcript;
-                }
+                    var text = event.results.item(0).item(0).transcript;}
                 else{
-                for(var i = event.results.length-2; i < event.results.length; i++){
-                    text = text + "．<br>" + event.results.item(i).item(0).transcript;}
-                }
+                    var text = event.results.item(0).item(0).transcript;
+                    for(var i = event.results.length-2; i < event.results.length; i++){
+                        text = text + "．<br>" + event.results.item(i).item(0).transcript;}}
+                
                 document.getElementById('result_text').innerHTML = text
-                translate(text,sourceLang,targetLang)
-            }, false);
+                translate(text,sourceLang,targetLang)}, 
+            false);
 
             // 録音開始
             function record(){

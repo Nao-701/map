@@ -1,0 +1,24 @@
+<html>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <input id="inputText"></input>
+    <button onclick="checkText()">Check</button></br></br>
+
+    <div id = "video">
+        <video id="video_smaple" controls width="100%"></video>
+    </div>
+
+    <script>
+        document.getElementById("video").style.display = "none";
+
+        function checkText() {
+            let url = document.getElementById("inputText").value;
+            document.getElementById("video").style.display = "block";
+            if(Hls.isSupported()) {
+                var video = document.getElementById('video_smaple');
+                var hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+            }
+        }
+    </script>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sankey Diagram Generator</title>
+    <meta charset="UTF-8">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <h1>サンキーチャート</h1>
+    <form>
+        <label>EXCELからそのままコピペしてください:</label><br>
+        <textarea id="links" rows="10" cols="50"></textarea>
+        <br>
+        <button type="button" onclick="generateSankey()">Generate Sankey</button>
+    </form>
+    <div id="sankey"></div>
+    <script>
+        function generateSankey() {
+            // Get the link data from the input field
+            var linkStr = document.getElementById("links").value;
+
+            // ノードとリンクの配列を初期化する
+            var nodes = [];
+            var links = [];
+
+            // リンクデータを配列の配列にパースする
+            var linkData = linkStr.split("\n").map(function (row) {
+                return row.split("\t");
+            });
+
+            // リンクデータの行をループし，ノードとリンクを作成する
+            for (var i = 0; i < linkData.length; i++) {
+                var row = linkData[i];
+                var sourceLabel = row[0].trim();
+                var targetLabel = row[1].trim();
+                var value = parseInt(row[2]);
+                if (value > 0) {
+                    var sourceNodeIndex = nodes.findIndex(function (node) { return node.label === sourceLabel; });
+                    if (sourceNodeIndex === -1) {
+                        sourceNodeIndex = nodes.length;
+                        nodes.push({ label: sourceLabel });
+                    }
+                    var targetNodeIndex = nodes.findIndex(function (node) { return node.label === targetLabel; });
+                    if (targetNodeIndex === -1) {
+                        targetNodeIndex = nodes.length;
+                        nodes.push({ label: targetLabel });
+                    }
+                    links.push({ source: sourceNodeIndex, target: targetNodeIndex, value: value });
+                }
+            }
+
+            // サンキーダイアグラムを作成する
+            var layout = { width: 800, height: 600 };
+            var data = [{
+                type: "sankey",
+                node: {
+                    pad: 15,
+                    thickness: 20,
+                    line: {
+                        color: "black",
+                        width: 0.5
+                    },
+                    label: nodes.map(function (node) { return node.label.includes(" ") ? `"${node.label}"` : node.label; })
+                },
+                link: {
+                    source: links.map(function (link) { return link.source; }),
+                    target: links.map(function (link) { return link.target; }),
+                    value: links.map(function (link) { return link.value; })
+                }
+            }];
+            Plotly.newPlot("sankey", data, layout);
+        }
+    </script>
+</body>
+
+</html>

@@ -105,8 +105,8 @@
 
             // サンキーダイアグラムを作成する
             var layout = {
-                width: Math.max(window.innerWidth * 0.8, 800),
-                height: Math.max(window.innerHeight * 0.8, 600)
+                width: window.outerWidth * 0.8,
+                height: window.outerHeight * 0.8
             };
             var data = [{
                 type: "sankey",
@@ -127,10 +127,20 @@
             }];
             Plotly.newPlot("sankey", data, layout);
         }
+
+        // ブラウザサイズが変更されたときに実行する関数を定義
+        function updateSankeySize() {
+            generateSankey()
+        }
+
+        // ブラウザサイズ変更時に実行する関数をイベントリスナーに登録
+        window.addEventListener("resize", updateSankeySize);
+
     </script>
 </body>
 <style>
     /* ページ全体のスタイル */
+
     body {
         background-color: #f8f8f8;
         font-family: Arial, sans-serif;
@@ -141,21 +151,26 @@
     }
 
     /* ヘッダーのスタイル */
+
     h1 {
         text-align: center;
         margin: 2rem 0;
         font-size: 3rem;
     }
+
     /* フォームのスタイル */
+
     form {
         display: flex;
         flex-direction: column;
         align-items: center;
     }
+
     label {
         font-size: 1.5rem;
         margin-bottom: 1rem;
     }
+
     textarea {
         font-size: 1.2rem;
         padding: 0.5rem;
@@ -163,6 +178,7 @@
         border: 1px solid #ddd;
         margin-bottom: 1rem;
     }
+
     button {
         padding: 0.8rem 1.5rem;
         font-size: 1.2rem;
@@ -173,31 +189,37 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
+
     button:hover {
         background-color: #3e8e41;
     }
 
     /* テーブルのスタイル */
+
     table {
         border-collapse: collapse;
         width: 100%;
         margin-bottom: 1rem;
     }
+
     th,
     td {
         border: 1px solid #ddd;
         text-align: left;
         padding: 0.5rem;
     }
+
     th {
         background-color: #4CAF50;
         color: white;
     }
 
     /* サンキーチャートのスタイル */
+
     #sankey {
         margin-top: 2rem;
         width: 100%;
     }
 </style>
+
 </html>

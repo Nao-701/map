@@ -6,4 +6,6 @@
 
 [Sankey Diagram Generator](https://naohiro701.github.io/others/Sankey_Diagram_Generator.html)
 
+[改行を取り除いて翻訳するツール](https://naohiro701.github.io/others/remove_line_breaks_translate.html)
+
 [重心マップ-ポリゴン](https://www.google.com/maps/d/u/0/edit?mid=1PW4yP7OXgIi6t02e8sAYZMT5VnOSeOA&usp=sharing)

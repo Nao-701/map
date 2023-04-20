@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Convert 2D Data to JSON String</title>
 	<!-- Load Bootstrap CSS -->
@@ -7,6 +8,7 @@
 	<!-- Load custom CSS -->
 	<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 	<div class="container my-5">
 		<h1 class="text-center">Convert 2D Data to JSON String</h1>
@@ -17,7 +19,7 @@
 					<textarea class="form-control" id="input" placeholder="Enter 2D data here" rows="10">Name	Age	City
 John	30	New York
 Jane	25	Los Angeles
-Bob	40	Miami</textarea>
+Bob	40.5	Miami</textarea>
 				</div>
 				<button class="btn btn-primary mt-2" onclick="convert()">Convert</button>
 			</div>
@@ -25,7 +27,8 @@ Bob	40	Miami</textarea>
 				<div class="form-group">
 					<label for="output">JSON String</label>
 					<div class="input-group">
-						<textarea class="form-control" id="output" placeholder="JSON string will appear here" rows="10" readonly></textarea>
+						<textarea class="form-control" id="output" placeholder="JSON string will appear here" rows="10"
+							readonly></textarea>
 						<div class="input-group-append">
 							<button class="btn btn-sm btn-secondary" onclick="copy()">Copy</button>
 						</div>
@@ -60,11 +63,15 @@ Bob	40	Miami</textarea>
 			for (let i = 1; i < inputArr.length; i++) {
 				const rowObj = {};
 				for (let j = 1; j < inputArr[i].length; j++) {
-					rowObj[inputArr[0][j]] = inputArr[i][j];
+					const value = inputArr[i][j];
+					if (!isNaN(value)) {
+						rowObj[inputArr[0][j]] = parseFloat(value);
+					} else {
+						rowObj[inputArr[0][j]] = value;
+					}
 				}
 				outputObj[inputArr[i][0]] = rowObj;
 			}
-
 			// Convert object to JSON string with automatic indentation
 			const outputStr = JSON.stringify(outputObj, null, '\t');
 			document.getElementById('output').value = outputStr;
@@ -78,4 +85,5 @@ Bob	40	Miami</textarea>
 		}
 	</script>
 </body>
+
 </html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Convert 2D Data to JSON String</title>
+	<!-- Load Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<!-- Load custom CSS -->
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div class="container my-5">
+		<h1 class="text-center">Convert 2D Data to JSON String</h1>
+		<div class="row mt-4">
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="input">Enter 2D Data</label>
+					<textarea class="form-control" id="input" placeholder="Enter 2D data here" rows="10">Name	Age	City
+John	30	New York
+Jane	25	Los Angeles
+Bob	40	Miami</textarea>
+				</div>
+				<button class="btn btn-primary mt-2" onclick="convert()">Convert</button>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="output">JSON String</label>
+					<div class="input-group">
+						<textarea class="form-control" id="output" placeholder="JSON string will appear here" rows="10" readonly></textarea>
+						<div class="input-group-append">
+							<button class="btn btn-sm btn-secondary" onclick="copy()">Copy</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-md-12">
+				<h3>Usage:</h3>
+				<p>1. Enter 2D data in the input area.</p>
+				<p>2. Click the "Convert" button.</p>
+				<p>3. The JSON string will appear in the output area.</p>
+				<p>4. Click the "Copy" button to copy the JSON string to the clipboard.</p>
+			</div>
+		</div>
+	</div>
+	<!-- Load Bootstrap JavaScript and jQuery -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script>
+		function convert() {
+			// Get 2D data string
+			const inputStr = document.getElementById('input').value.trim();
+
+			// Convert 2D data to array
+			const inputArr = inputStr.split('\n').map(row => row.split('\t'));
+
+			// Convert 2D array to object
+			const outputObj = {};
+			for (let i = 1; i < inputArr.length; i++) {
+				const rowObj = {};
+				for (let j = 1; j < inputArr[i].length; j++) {
+					rowObj[inputArr[0][j]] = inputArr[i][j];
+				}
+				outputObj[inputArr[i][0]] = rowObj;
+			}
+
+			// Convert object to JSON string with automatic indentation
+			const outputStr = JSON.stringify(outputObj, null, '\t');
+			document.getElementById('output').value = outputStr;
+		}
+
+		function copy() {
+			// Copy text in output textarea to clipboard
+			const outputElem = document.getElementById('output');
+			outputElem.select();
+			document.execCommand('copy');
+		}
+	</script>
+</body>
+</html>

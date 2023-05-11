@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exponential Growth Plotter</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <h1>Exponential Growth Plotter</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>title</th>
+                <th>start year</th>
+                <th>start value</th>
+                <th>end year</th>
+                <th>end value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>example</td>
+                <td>2010</td>
+                <td>1</td>
+                <td>2020</td>
+                <td>20</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="container">
+        <div class="input-section">
+            <textarea id="inputData" placeholder="Enter data here..."></textarea>
+            <div class="year-inputs">
+                <input type="number" id="startYear" placeholder="Start Year" value="2000">
+                <input type="number" id="endYear" placeholder="End Year" value="2050">
+            </div>
+        </div>
+        <button id="plotButton" onclick="plotExponentialGrowth()">Plot</button>
+    </div>
+
+    <div id="plotDiv"></div>
+
+
+    <script>
+        function parseData(input) {
+            const lines = input.trim().split('\n');
+            return lines.map(line => {
+                const [title, startYear, startValue, endYear, endValue] = line.trim().split(/\s+/);
+                return {
+                    title,
+                    startYear: Number(startYear),
+                    startValue: Number(startValue),
+                    endYear: Number(endYear),
+                    endValue: Number(endValue)
+                };
+            });
+        }
+
+        function exponentialInterpolation(data, startYear, endYear) {
+            return data.map(item => {
+                const startValueLog = Math.log(item.startValue);
+                const endValueLog = Math.log(item.endValue);
+                const growthRate = (endValueLog - startValueLog) / (item.endYear - item.startYear);
+
+                let curveData = [];
+                for (let year = startYear; year <= endYear; year++) {
+                    let value, lineStyle;
+
+                    if (year < item.startYear) {
+                        value = Math.exp(startValueLog + growthRate * (year - item.startYear));
+                        lineStyle = "dashed";
+                    } else if (year > item.endYear) {
+                        value = Math.exp(endValueLog + growthRate * (year - item.endYear));
+                        lineStyle = "dashed";
+                    } else {
+                        value = Math.exp(startValueLog + growthRate * (year - item.startYear));
+                        lineStyle = "solid";
+                    }
+
+                    curveData.push({ x: year, y: value, lineStyle: lineStyle });
+                }
+
+                return { title: item.title, curveData: curveData };
+            });
+        }
+
+        function plotExponentialGrowth() {
+            const inputData = document.getElementById("inputData").value;
+            const startYear = parseInt(document.getElementById("startYear").value, 10);
+            const endYear = parseInt(document.getElementById("endYear").value, 10);
+            const parsedData = parseData(inputData);
+            const interpolatedData = exponentialInterpolation(parsedData, startYear, endYear);
+            console.log("Input Data:", inputData); // print input data
+
+            const data = [];
+            let colorIndex = 0;
+            const colors = ['blue', 'red', 'green', 'black', 'purple', 'orange'];
+
+            interpolatedData.forEach(item => {
+                let currentColor = colors[colorIndex % colors.length];
+
+                for (let i = 0; i < item.curveData.length; i++) {
+                    const point = item.curveData[i];
+                    const nextPoint = item.curveData[i + 1];
+                    const dash = point.lineStyle === "dashed" ? "dash" : "solid";
+
+                    const trace = {
+                        x: [point.x, nextPoint ? nextPoint.x : point.x],
+                        y: [point.y, nextPoint ? nextPoint.y : point.y],
+                        mode: "lines+markers",
+                        line: { dash: dash, color: currentColor },
+                        name: i === 0 ? item.title : '',
+                        showlegend: i === 0
+                    };
+
+                    data.push(trace);
+                }
+
+                colorIndex++;
+            });
+
+            const layout = {
+                title: "Exponential Growth Plot",
+                xaxis: { title: "Year" },
+                yaxis: { title: "Value" },
+                yaxis: { rangemode: 'tozero' }
+            };
+
+            Plotly.newPlot("plotDiv", data, layout);
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            width: 80%;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+        }
+
+        #inputData{
+            width: 650px;
+            height: 100px;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #startYear,
+        #endYear {
+            width: 300px;
+            height: 30px;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .year-inputs {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #plotButton {
+            width: 300px;
+            height: 50px;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #plotButton:hover {
+            background-color: #0056b3;
+        }
+
+        #plotDiv {
+            width: 1000px;
+            height: 800px;
+            margin-top: 20px;
+        }
+        table {
+        border-collapse: collapse;
+        width: 1000px;
+        margin-bottom: 1rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 0.5rem;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</body>
+
+</html>

@@ -21,12 +21,23 @@
         const ctx = canvas.getContext('2d');
 
         let audioContext;
+        let audioBuffer;  // c4のオーディオバッファ
 
         function initializeAudioContext() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                fetchC4Sample();  // AudioContextの初期化時にc4サンプルもフェッチ
                 canvas.removeEventListener('mousedown', initializeAudioContext);
             }
+        }
+
+        function fetchC4Sample() {
+            fetch('c40.mp3')  // c4のmp3ファイルへのパスを指定
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                .then(decodedBuffer => {
+                    audioBuffer = decodedBuffer;
+                });
         }
 
         canvas.addEventListener('mousedown', initializeAudioContext);
@@ -36,17 +47,9 @@
 
         let waves = [];
         let dragging = false;
-        const C4 = 261.63;
-        let scales = [
-            C4,                       // C4
-            C4 * (9/8),               // D4
-            C4 * (81/64),             // E4
-            C4 * (4/3),               // F4
-            C4 * (3/2),               // G4
-            C4 * (27/16),             // A4
-            C4 * (243/128),           // B4
-            C4 * 2                    // C5
-        ];
+
+        // c4に対する各音階の再生速度の比率
+        const scalesRatio = [1, 9/8, 81/64, 4/3, 3/2, 27/16, 243/128, 2];
 
         class Wave {
             constructor(x, y) {
@@ -66,17 +69,16 @@
             }
 
             playSound() {
-                if (!audioContext) return;
+                if (!audioContext || !audioBuffer) return;
 
-                const oscillator = audioContext.createOscillator();
-                oscillator.type = 'sine';
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
 
-                // Y座標に基づいて音階を選択
-                let index = Math.floor(this.y / canvas.height * scales.length);
-                oscillator.frequency.setValueAtTime(scales[index], audioContext.currentTime);
+                let index = Math.floor(this.y / canvas.height * scalesRatio.length);
+                source.playbackRate.setValueAtTime(scalesRatio[index], audioContext.currentTime);
 
                 // X座標に基づいて音の長さを決定
-                let duration = 0.5;
+                let duration = 2.5;
                 if (this.x < canvas.width * 0.25) {
                     duration = duration * 1; // 4分音符
                 } else if (this.x < canvas.width * 0.5) {
@@ -86,9 +88,10 @@
                 } else {
                     duration = duration * 0.125; // 32分音符
                 }
-                oscillator.connect(audioContext.destination);
-                oscillator.start();
-                oscillator.stop(audioContext.currentTime + duration);
+
+                source.connect(audioContext.destination);
+                source.start(0);
+                source.stop(audioContext.currentTime + duration);
             }
 
             update() {

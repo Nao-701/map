@@ -11,10 +11,20 @@
             display: block;
             margin: 0 auto;
         }
+        body.fullscreen {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 
-<body>
+<body class="fullscreen">
     <canvas id="artCanvas"></canvas>
     <script>
         const canvas = document.getElementById('artCanvas');
@@ -135,6 +145,17 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             waves.forEach(wave => wave.update());
         }
+
+        function adjustCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        // ウィンドウのサイズが変わったときにキャンバスのサイズを調整
+        window.addEventListener('resize', adjustCanvasSize);
+
+        // 初期ロード時にもキャンバスのサイズを調整
+        adjustCanvasSize();
 
         animate();
     </script>

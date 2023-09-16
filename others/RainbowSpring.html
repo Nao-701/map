@@ -20,11 +20,21 @@
         const canvas = document.getElementById('artCanvas');
         const ctx = canvas.getContext('2d');
 
+        // Web Audio APIの初期化
+        let audioContext;
+
+        function startAudioContext() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            canvas.removeEventListener('click', startAudioContext);
+        }
+        
+        canvas.addEventListener('click', startAudioContext);
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         let waves = [];
-        let dragging = false; // ドラッグ中かどうかを判定する変数
+        let dragging = false;
 
         class Wave {
             constructor(x, y) {
@@ -32,6 +42,7 @@
                 this.y = y;
                 this.radius = 0;
                 this.color = `hsl(${Math.random() * 360}, 90%, ${40 + Math.random() * 20}%)`;
+                this.playSound();
             }
 
             draw() {
@@ -42,10 +53,25 @@
                 ctx.stroke();
             }
 
+            playSound() {
+                if (!audioContext) return; // AudioContextが初期化されていない場合は早期リターン
+
+                const oscillator = audioContext.createOscillator();
+                oscillator.type = 'sine';
+
+                const baseFrequency = 440;
+                const maxFrequency = 880;
+                const frequency = baseFrequency + (maxFrequency - baseFrequency) * (this.y / canvas.height);
+                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+
+                oscillator.connect(audioContext.destination);
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + this.radius / 1000);
+            }
+
             update() {
                 this.radius += 10;
                 this.draw();
-                // 画面の対角線の長さを超えた波を削除
                 if (this.radius > Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2) {
                     const index = waves.findIndex(w => w === this);
                     if (index !== -1) waves.splice(index, 1);
@@ -83,8 +109,6 @@
             ctx.fillStyle = 'rgba(0, 0, 1, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             waves.forEach(wave => wave.update());
-            // リストの長さをログ出力
-            console.log(waves.length);
         }
 
         animate();

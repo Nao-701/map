@@ -11,17 +11,20 @@
 </head>
 
 <body>
+    <canvas id="artCanvas"></canvas>
+    <div id ="main">
     <h2>所属</h2>
-    <p>東北大学，中田研究室</p>
+    <p>東北大学 大学院，エネルギーサステナビリティ研究室</p>
     <h2>経歴</h2>
     <p>2022年10月~: 東北大学 工学研究科, 秋入学</p>
     <p>2019年4月~2022年9月: 東北大学 工学部 機械知能航空工学科, 早期卒業</p>
     <h2>実績</h2>
-    <p><a href="https://www.eng.tohoku.ac.jp/news/detail-,-id,2495.html">工学部長賞</a> (2023.03)</p>
-    <p><a href="https://www.jser.gr.jp/events/39enecon_program/">第39回エネルギーシステム・経済・環境コンファレンス</a>: 日本の電力システムにおけるデータセンターの分散配置および負荷分散の効果分析，直井　宏樹，小野寺　弘晃，根本　和宜，Delage Rémi，中田　俊彦（2023.01）</p>
+    <p><a href="https://jsmcwm.or.jp/taikai2023/files/2023/09/6_program_JPN_230910.pdf">第34回廃棄物資源循環学会研究発表会</a>: 廃棄物処理施設へのCCUS技術導入の理論的枠組みとしての数理最適化モデルの提案，長野尚也, 直井宏樹, 永友佑, 山本圓, 井伊亮太 [パシフィックコンサルタンツ]（2023.09）</p>
+    <p><a href="https://www.eng.tohoku.ac.jp/news/detail-,-id,2495.html">東北大学 工学部長賞</a> 受賞 (2023.03)</p>
+    <p><a href="https://www.jser.gr.jp/events/39enecon_program/">第39回エネルギーシステム・経済・環境コンファレンス</a>: 日本の電力システムにおけるデータセンターの分散配置および負荷分散の効果分析，直井宏樹，小野寺弘晃，根本和宜，Delage Rémi，中田俊彦 [東北大学]（2023.01）</p>
     <p><a href="https://energy-sustainability.jp/">地域エネルギー需給データベース</a>: 開発者, Webマッピング担当 (2022.04~)</p>
     <p><a href="https://webcon.japias.jp/page-library_20.html">第20回全国中学高校Webコンテスト</a>: ファイナリスト, 金賞 (2018.03)</p>
-
+</div>
     <!-- JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
@@ -29,10 +32,35 @@
 </body>
     <!-- Custom CSS -->
     <style>
-        body {
-            background-color: #f2f2f2;
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            background-color: #ffffff;  /* 背景色を白に変更 */
+            display: block;
+            margin: 0 auto;
+        }
+        #main {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.5);
+            opacity: 1;
             font-family: 'Noto Sans JP', sans-serif;
             margin: 10%;
+            padding: 2rem;
+            border-radius: 15px;  
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        body.fullscreen {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         h1 {
@@ -58,4 +86,141 @@
             color: #008080;
         }
     </style>
+
+<script>
+    const canvas = document.getElementById('artCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let audioContext;
+    let audioBuffer;  // c4のオーディオバッファ
+
+    function initializeAudioContext() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            fetchC4Sample();  // AudioContextの初期化時にc4サンプルもフェッチ
+            canvas.removeEventListener('mousedown', initializeAudioContext);
+        }
+    }
+
+    function fetchC4Sample() {
+        fetch('others/c40.mp3')  // c4のmp3ファイルへのパスを指定
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+            .then(decodedBuffer => {
+                audioBuffer = decodedBuffer;
+            });
+    }
+
+    canvas.addEventListener('mousedown', initializeAudioContext);
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let waves = [];
+    let dragging = false;
+
+    // c4に対する各音階の再生速度の比率
+    const scalesRatio = [1, 9/8, 81/64, 4/3, 3/2, 27/16, 243/128, 2];
+
+    class Wave {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.radius = 0;
+            this.color = `hsl(${this.y / canvas.height * 360}, 90%, ${40 + this.y / canvas.height * 20}%)`;
+            this.playSound();
+        }
+
+        draw() {
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        playSound() {
+            if (!audioContext || !audioBuffer) return;
+
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+
+            let index = Math.floor(this.y / canvas.height * scalesRatio.length);
+            source.playbackRate.setValueAtTime(scalesRatio[index], audioContext.currentTime);
+
+            // X座標に基づいて音の長さを決定
+            let duration = 2.5;
+            if (this.x < canvas.width * 0.25) {
+                duration = duration * 1; // 4分音符
+            } else if (this.x < canvas.width * 0.5) {
+                duration = duration * 0.5; // 8分音符
+            } else if (this.x < canvas.width * 0.75) {
+                duration = duration * 0.25; // 16分音符
+            } else {
+                duration = duration * 0.125; // 32分音符
+            }
+
+            source.connect(audioContext.destination);
+            source.start(0);
+            source.stop(audioContext.currentTime + duration);
+        }
+
+        update() {
+            this.radius += this.x / canvas.width * 15;
+            this.draw();
+            if (this.radius > Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 1) {
+                const index = waves.findIndex(w => w === this);
+                if (index !== -1) waves.splice(index, 1);
+            }
+        }
+    }
+
+    function createWave(x, y) {
+        waves.push(new Wave(x, y));
+    }
+
+    canvas.addEventListener('mousedown', (event) => {
+        dragging = true;
+        createWave(event.clientX, event.clientY);
+    });
+
+    canvas.addEventListener('mousemove', (event) => {
+        if (dragging) {
+            createWave(event.clientX, event.clientY);
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        dragging = false;
+    });
+
+    setInterval(() => {
+        const randomX = Math.random() * canvas.width;
+        const randomY = Math.random() * canvas.height;
+        createWave(randomX, randomY);
+    }, 80000000);
+
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        waves.forEach(wave => wave.update());
+    }
+
+    function adjustCanvasSize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    // ウィンドウのサイズが変わったときにキャンバスのサイズを調整
+    window.addEventListener('resize', adjustCanvasSize);
+
+    // 初期ロード時にもキャンバスのサイズを調整
+    adjustCanvasSize();
+
+    animate();
+</script>
+
+
+
 </html>

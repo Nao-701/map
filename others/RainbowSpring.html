@@ -26,139 +26,140 @@
 
 <body class="fullscreen">
     <canvas id="artCanvas"></canvas>
-    <script>
-        const canvas = document.getElementById('artCanvas');
-        const ctx = canvas.getContext('2d');
+</body>
 
-        let audioContext;
-        let audioBuffer;  // c4のオーディオバッファ
+<script>
+    const canvas = document.getElementById('artCanvas');
+    const ctx = canvas.getContext('2d');
 
-        function initializeAudioContext() {
-            if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                fetchC4Sample();  // AudioContextの初期化時にc4サンプルもフェッチ
-                canvas.removeEventListener('mousedown', initializeAudioContext);
+    let audioContext;
+    let audioBuffer;  // c4のオーディオバッファ
+
+    function initializeAudioContext() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            fetchC4Sample();  // AudioContextの初期化時にc4サンプルもフェッチ
+            canvas.removeEventListener('mousedown', initializeAudioContext);
+        }
+    }
+
+    function fetchC4Sample() {
+        fetch('c40.mp3')  // c4のmp3ファイルへのパスを指定
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+            .then(decodedBuffer => {
+                audioBuffer = decodedBuffer;
+            });
+    }
+
+    canvas.addEventListener('mousedown', initializeAudioContext);
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let waves = [];
+    let dragging = false;
+
+    // c4に対する各音階の再生速度の比率
+    const scalesRatio = [1, 9/8, 81/64, 4/3, 3/2, 27/16, 243/128, 2];
+
+    class Wave {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.radius = 0;
+            this.color = `hsl(${this.y / canvas.height * 360}, 90%, ${40 + this.y / canvas.height * 20}%)`;
+            this.playSound();
+        }
+
+        draw() {
+            ctx.strokeStyle = this.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        playSound() {
+            if (!audioContext || !audioBuffer) return;
+
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+
+            let index = Math.floor(this.y / canvas.height * scalesRatio.length);
+            source.playbackRate.setValueAtTime(scalesRatio[index], audioContext.currentTime);
+
+            // X座標に基づいて音の長さを決定
+            let duration = 2.5;
+            if (this.x < canvas.width * 0.25) {
+                duration = duration * 1; // 4分音符
+            } else if (this.x < canvas.width * 0.5) {
+                duration = duration * 0.5; // 8分音符
+            } else if (this.x < canvas.width * 0.75) {
+                duration = duration * 0.25; // 16分音符
+            } else {
+                duration = duration * 0.125; // 32分音符
+            }
+
+            source.connect(audioContext.destination);
+            source.start(0);
+            source.stop(audioContext.currentTime + duration);
+        }
+
+        update() {
+            this.radius += this.x / canvas.width * 15;
+            this.draw();
+            if (this.radius > Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2) {
+                const index = waves.findIndex(w => w === this);
+                if (index !== -1) waves.splice(index, 1);
             }
         }
+    }
 
-        function fetchC4Sample() {
-            fetch('c40.mp3')  // c4のmp3ファイルへのパスを指定
-                .then(response => response.arrayBuffer())
-                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-                .then(decodedBuffer => {
-                    audioBuffer = decodedBuffer;
-                });
+    function createWave(x, y) {
+        waves.push(new Wave(x, y));
+    }
+
+    canvas.addEventListener('mousedown', (event) => {
+        dragging = true;
+        createWave(event.clientX, event.clientY);
+    });
+
+    canvas.addEventListener('mousemove', (event) => {
+        if (dragging) {
+            createWave(event.clientX, event.clientY);
         }
+    });
 
-        canvas.addEventListener('mousedown', initializeAudioContext);
+    canvas.addEventListener('mouseup', () => {
+        dragging = false;
+    });
 
+    setInterval(() => {
+        const randomX = Math.random() * canvas.width;
+        const randomY = Math.random() * canvas.height;
+        createWave(randomX, randomY);
+    }, 80000000);
+
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.fillStyle = 'rgba(0, 0, 1, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        waves.forEach(wave => wave.update());
+    }
+
+    function adjustCanvasSize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+    }
 
-        let waves = [];
-        let dragging = false;
+    // ウィンドウのサイズが変わったときにキャンバスのサイズを調整
+    window.addEventListener('resize', adjustCanvasSize);
 
-        // c4に対する各音階の再生速度の比率
-        const scalesRatio = [1, 9/8, 81/64, 4/3, 3/2, 27/16, 243/128, 2];
+    // 初期ロード時にもキャンバスのサイズを調整
+    adjustCanvasSize();
 
-        class Wave {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.radius = 0;
-                this.color = `hsl(${this.y / canvas.height * 360}, 90%, ${40 + this.y / canvas.height * 20}%)`;
-                this.playSound();
-            }
-
-            draw() {
-                ctx.strokeStyle = this.color;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-
-            playSound() {
-                if (!audioContext || !audioBuffer) return;
-
-                const source = audioContext.createBufferSource();
-                source.buffer = audioBuffer;
-
-                let index = Math.floor(this.y / canvas.height * scalesRatio.length);
-                source.playbackRate.setValueAtTime(scalesRatio[index], audioContext.currentTime);
-
-                // X座標に基づいて音の長さを決定
-                let duration = 2.5;
-                if (this.x < canvas.width * 0.25) {
-                    duration = duration * 1; // 4分音符
-                } else if (this.x < canvas.width * 0.5) {
-                    duration = duration * 0.5; // 8分音符
-                } else if (this.x < canvas.width * 0.75) {
-                    duration = duration * 0.25; // 16分音符
-                } else {
-                    duration = duration * 0.125; // 32分音符
-                }
-
-                source.connect(audioContext.destination);
-                source.start(0);
-                source.stop(audioContext.currentTime + duration);
-            }
-
-            update() {
-                this.radius += this.x / canvas.width * 15;
-                this.draw();
-                if (this.radius > Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2) {
-                    const index = waves.findIndex(w => w === this);
-                    if (index !== -1) waves.splice(index, 1);
-                }
-            }
-        }
-
-        function createWave(x, y) {
-            waves.push(new Wave(x, y));
-        }
-
-        canvas.addEventListener('mousedown', (event) => {
-            dragging = true;
-            createWave(event.clientX, event.clientY);
-        });
-
-        canvas.addEventListener('mousemove', (event) => {
-            if (dragging) {
-                createWave(event.clientX, event.clientY);
-            }
-        });
-
-        canvas.addEventListener('mouseup', () => {
-            dragging = false;
-        });
-
-        setInterval(() => {
-            const randomX = Math.random() * canvas.width;
-            const randomY = Math.random() * canvas.height;
-            createWave(randomX, randomY);
-        }, 80000000);
-
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.fillStyle = 'rgba(0, 0, 1, 0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            waves.forEach(wave => wave.update());
-        }
-
-        function adjustCanvasSize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        // ウィンドウのサイズが変わったときにキャンバスのサイズを調整
-        window.addEventListener('resize', adjustCanvasSize);
-
-        // 初期ロード時にもキャンバスのサイズを調整
-        adjustCanvasSize();
-
-        animate();
-    </script>
-</body>
+    animate();
+</script>
 
 </html>

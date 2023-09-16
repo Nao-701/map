@@ -36,13 +36,24 @@
 
         let waves = [];
         let dragging = false;
+        const C4 = 261.63;
+        let scales = [
+            C4,                       // C4
+            C4 * (9/8),               // D4
+            C4 * (81/64),             // E4
+            C4 * (4/3),               // F4
+            C4 * (3/2),               // G4
+            C4 * (27/16),             // A4
+            C4 * (243/128),           // B4
+            C4 * 2                    // C5
+        ];
 
         class Wave {
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
                 this.radius = 0;
-                this.color = `hsl(${this.x / canvas.width * 360}, 90%, ${40 + this.x / canvas.width * 20}%)`;
+                this.color = `hsl(${this.y / canvas.height * 360}, 90%, ${40 + this.y / canvas.height * 20}%)`;
                 this.playSound();
             }
 
@@ -60,14 +71,24 @@
                 const oscillator = audioContext.createOscillator();
                 oscillator.type = 'sine';
 
-                const baseFrequency = 440;
-                const maxFrequency = 880;
-                const frequency = baseFrequency + (maxFrequency - baseFrequency) * (this.y / canvas.height);
-                oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                // Y座標に基づいて音階を選択
+                let index = Math.floor(this.y / canvas.height * scales.length);
+                oscillator.frequency.setValueAtTime(scales[index], audioContext.currentTime);
 
+                // X座標に基づいて音の長さを決定
+                let duration = 0.5;
+                if (this.x < canvas.width * 0.25) {
+                    duration = duration * 1; // 4分音符
+                } else if (this.x < canvas.width * 0.5) {
+                    duration = duration * 0.5; // 8分音符
+                } else if (this.x < canvas.width * 0.75) {
+                    duration = duration * 0.25; // 16分音符
+                } else {
+                    duration = duration * 0.125; // 32分音符
+                }
                 oscillator.connect(audioContext.destination);
                 oscillator.start();
-                oscillator.stop(audioContext.currentTime + this.x / canvas.width / 1.5);  // 1秒の長さで音を再生
+                oscillator.stop(audioContext.currentTime + duration);
             }
 
             update() {
@@ -103,7 +124,7 @@
             const randomX = Math.random() * canvas.width;
             const randomY = Math.random() * canvas.height;
             createWave(randomX, randomY);
-        }, 800);
+        }, 80000000);
 
         function animate() {
             requestAnimationFrame(animate);

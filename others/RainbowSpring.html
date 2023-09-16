@@ -42,7 +42,7 @@
                 this.x = x;
                 this.y = y;
                 this.radius = 0;
-                this.color = `hsl(${Math.random() * 360}, 90%, ${40 + Math.random() * 20}%)`;
+                this.color = `hsl(${this.x / canvas.width * 360}, 90%, ${40 + this.x / canvas.width * 20}%)`;
                 this.playSound();
             }
 
@@ -67,11 +67,11 @@
 
                 oscillator.connect(audioContext.destination);
                 oscillator.start();
-                oscillator.stop(audioContext.currentTime + 0.1);  // 1秒の長さで音を再生
+                oscillator.stop(audioContext.currentTime + this.x / canvas.width / 1.5);  // 1秒の長さで音を再生
             }
 
             update() {
-                this.radius += 10;
+                this.radius += this.x / canvas.width * 15;
                 this.draw();
                 if (this.radius > Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) / 2) {
                     const index = waves.findIndex(w => w === this);

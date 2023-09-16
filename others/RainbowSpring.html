@@ -20,15 +20,16 @@
         const canvas = document.getElementById('artCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Web Audio APIの初期化
         let audioContext;
 
-        function startAudioContext() {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            canvas.removeEventListener('click', startAudioContext);
+        function initializeAudioContext() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                canvas.removeEventListener('mousedown', initializeAudioContext);
+            }
         }
-        
-        canvas.addEventListener('click', startAudioContext);
+
+        canvas.addEventListener('mousedown', initializeAudioContext);
 
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -54,7 +55,7 @@
             }
 
             playSound() {
-                if (!audioContext) return; // AudioContextが初期化されていない場合は早期リターン
+                if (!audioContext) return;
 
                 const oscillator = audioContext.createOscillator();
                 oscillator.type = 'sine';
@@ -66,7 +67,7 @@
 
                 oscillator.connect(audioContext.destination);
                 oscillator.start();
-                oscillator.stop(audioContext.currentTime + this.radius / 1000);
+                oscillator.stop(audioContext.currentTime + 0.1);  // 1秒の長さで音を再生
             }
 
             update() {

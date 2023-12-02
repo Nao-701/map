@@ -159,7 +159,7 @@
             const recordsPerPage = 1000;
             let data = []; // This will hold our contract data
 
-            fetch('/statics/db.json')
+            fetch('view-source:https://naohiro701.github.io/others/agency/statics/db.json')
                 .then(response => response.json())
                 .then(jsonData => {
                     data = jsonData;

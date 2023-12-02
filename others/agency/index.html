@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>官公庁入札データ</title>
+    <style>
+        /* スタイル設定 */
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .checkbox-container {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>契約データ</h1>
+    
+    <!-- 検索ボックス -->
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="キーワードで検索">
+    </div>
+    <div class="search-box">
+        <select id="partnerNameDropdown">
+            <option value="">全ての相手方を表示</option>
+            <!-- Options will be added dynamically -->
+        </select>
+    </div>
+
+    <!-- 列選択用のチェックボックス -->
+    <div class="checkbox-container">
+        <input type="checkbox" id="service_name" checked>
+        <label for="service_name">名称</label>
+
+        <input type="checkbox" id="partner_name" checked>
+        <label for="partner_name">パートナー</label>
+
+        <input type="checkbox" id="contract_date" checked>
+        <label for="agency">省庁</label>
+
+        <input type="checkbox" id="month" checked>
+        <label for="month">年度</label>
+
+        <!-- 必要に応じて他の列に対するチェックボックスも追加 -->
+    </div>
+
+    <!-- データを表示する表 -->
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th class="service_name">名称</th>
+                <th class="partner_name">パートナー</th>
+                <th class="agency">省庁</th>
+                <th class="month">年度</th>
+                <!-- 他の列も同様に追加 -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- JSONデータがここに挿入される -->
+        </tbody>
+    </table>
+
+    <script>
+        let currentPage = 1;
+        const recordsPerPage = 1000;
+        let data = []; // 元のデータ
+        let filteredData = []; // フィルタリングされたデータ
+
+        // Function to set up pagination controls
+        function setupPagination(totalItems) {
+            const paginationContainer = document.getElementById('pagination');
+            paginationContainer.innerHTML = '';
+
+            let pageCount = Math.ceil(totalItems / recordsPerPage);
+            for (let i = 1; i <= pageCount; i++) {
+                let btn = paginationButton(i);
+                paginationContainer.appendChild(btn);
+            }
+        }
+
+        // Function to create a pagination button
+        function paginationButton(page) {
+            let button = document.createElement('button');
+            button.innerText = page;
+
+            if (currentPage == page) button.classList.add('active');
+
+            button.addEventListener('click', function() {
+                changePage(page);
+            });
+
+            return button;
+        }
+
+        // データのフィルタリング
+        function filterData() {
+            let inputText, filterText, inputDropdown, filterDropdown, table, tr, td, i, txtValue;
+            inputText = document.getElementById("searchInput");
+            filterText = inputText.value.toUpperCase();
+            inputDropdown = document.getElementById("partnerNameDropdown");
+            filterDropdown = inputDropdown.value;
+
+            table = document.getElementById("data-table");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 1; i < tr.length; i++) {
+                let isTextMatch = false;
+                let isDropdownMatch = false;
+
+                // テキスト検索フィルタ
+                td = tr[i].getElementsByClassName("service_name")[0]; // 'service_name' を検索対象の列に合わせて調整してください
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filterText) > -1) {
+                        isTextMatch = true;
+                    }
+                }
+
+                // ドロップダウン選択フィルタ
+                td = tr[i].getElementsByClassName("partner_name")[0]; // 'partner_name' はドロップダウンの選択対象の列
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (filterDropdown === "" || txtValue === filterDropdown) {
+                        isDropdownMatch = true;
+                    }
+                }
+
+                // 両方の条件を満たす場合のみ表示
+                if (isTextMatch && isDropdownMatch) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+                // フィルタリングされたデータを更新
+                filteredData = [];
+                for (i = 1; i < tr.length; i++) {
+                    if (tr[i].style.display !== "none") {
+                        filteredData.push(data[i - 1]); // オリジナルのデータ配列からフィルタリングされたアイテムを追加
+                    }
+                }
+
+                // ページネーションの更新
+                setupPagination(filteredData.length);
+                changePage(1); // 最初のページに戻る
+            }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentPage = 1;
+            const recordsPerPage = 1000;
+            let data = []; // This will hold our contract data
+
+            fetch('/static/_済産業本省.json')
+                .then(response => response.json())
+                .then(jsonData => {
+                    data = jsonData;
+                    populatePartnerNameDropdown(data); // Populate the dropdown
+                    changePage(1); // Initialize the table with the first page of data
+                });
+
+
+
+            // Function to load data into the table for a specific page
+            function changePage(page) {
+                const tableBody = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+                tableBody.innerHTML = ''; // Clear existing data
+
+                currentPage = page;
+                let start = (currentPage - 1) * recordsPerPage;
+                let end = start + recordsPerPage;
+                let paginatedItems = filteredData.length > 0 ? filteredData.slice(start, end) : data.slice(start, end);
+
+
+                paginatedItems.forEach(item => {
+                    let row = `<tr>
+                        <td class="service_name">${item['service_name']}</td>
+                        <td class="partner_name">${item['partner_name']}</td>
+                        <td class="agency">${item['agency']}</td>
+                        <td class="month">${item['month']}</td>
+                        <!-- 他の列も同様に追加 -->
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+
+                setupPagination(data.length);
+            }
+
+
+
+        // Populate the partner name dropdown
+        function populatePartnerNameDropdown(data) {
+            let partnerNames = new Set();
+            data.forEach(item => partnerNames.add(item['partner_name']));
+            let dropdown = document.getElementById('partnerNameDropdown');
+            partnerNames.forEach(name => {
+                let option = document.createElement('option');
+                option.value = name;
+                option.text = name;
+                dropdown.appendChild(option);
+            });
+        }
+
+        // Pagination container
+        let paginationDiv = document.createElement('div');
+        paginationDiv.id = 'pagination';
+        document.body.appendChild(paginationDiv);
+
+        // イベントリスナーを追加
+        document.getElementById('searchInput').addEventListener('keyup', filterData);
+        document.getElementById('partnerNameDropdown').addEventListener('change', filterData);
+    });
+
+    </script>
+
+</body>
+</html>

@@ -4,21 +4,79 @@
     <meta charset="UTF-8">
     <title>官公庁入札データ</title>
     <style>
-        /* スタイル設定 */
-        table, th, td {
-            border: 1px solid black;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .search-box {
+            margin: 20px;
+            text-align: center;
+        }
+
+        input[type="text"], select {
+            width: 50%;
+            padding: 10px;
+            margin: 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            margin-bottom: 20px;
             border-collapse: collapse;
         }
+
         th, td {
-            padding: 5px;
+            padding: 10px;
             text-align: left;
+            border-bottom: 1px solid #ddd;
         }
+
         th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-        .checkbox-container {
-            margin-bottom: 10px;
+
+        tr:hover {
+            background-color: #ddd;
         }
+        .checkbox-container {
+            text-align: center;
+            padding: 10px;
+            margin: 20px 0;
+        }
+
+        .checkbox-container label {
+            margin: 0 10px;
+        }
+        #pagination button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            margin: 4px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #pagination button.active {
+            background-color: #317731;
+        }
+
+
     </style>
 </head>
 <body>

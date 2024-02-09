@@ -9,12 +9,21 @@
 
 <body>
     <h1>Sankey Diagram 作成アプリ</h1>
+    <!-- 色選択のための入力フィールドを追加 -->
+    <!-- ノードごとの色選択UI -->
+    <div id="nodeColors">
+        <!-- ここにJavaScriptでノードごとの色選択UIを動的に追加 -->
+    </div>
+    <div id="sankey"></div>
     <form>
+        <br>
+        <br>
         <label>Excel からそのままコピペしてください</label><br>
         <textarea id="links" rows="10" cols="50"></textarea>
-        <br>
+        <br><br>
         <button type="button" onclick="generateSankey()">Generate Sankey</button>
     </form>
+    <br>
     <br>
     <h2>データ作成例</h2>
     <table>
@@ -59,7 +68,7 @@
         </tbody>
     </table>
 
-    <div id="sankey"></div>
+
     <p>
         <a href="https://github.com/naohiro701/naohiro701.github.io/blob/main/others/Sankey_Diagram_Generator.html">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"  class="bi bi-github" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></svg>
@@ -73,16 +82,16 @@
             // Get the link data from the input field
             var linkStr = document.getElementById("links").value;
 
-            // ノードとリンクの配列を初期化する
+            // Initialize arrays for nodes and links
             var nodes = [];
             var links = [];
 
-            // リンクデータを配列の配列にパースする
+            // Parse the link data into an array of arrays
             var linkData = linkStr.split("\n").map(function (row) {
                 return row.split("\t");
             });
 
-            // リンクデータの行をループし，ノードとリンクを作成する
+            // Loop through the rows of link data, creating nodes and links
             for (var i = 0; i < linkData.length; i++) {
                 var row = linkData[i];
                 var sourceLabel = row[0].trim();
@@ -103,11 +112,21 @@
                 }
             }
 
-            // サンキーダイアグラムを作成する
+            // Create the Sankey diagram
             var layout = {
                 width: window.outerWidth * 0.8,
                 height: window.outerHeight * 0.8
             };
+
+            // Get the colors for each node
+            var nodeColors = {};
+            for (var i = 0; i < nodes.length; i++) {
+                var nodeColorInput = document.getElementById("color_" + nodes[i].label);
+                if (nodeColorInput) {
+                    nodeColors[nodes[i].label] = nodeColorInput.value;
+                }
+            }
+
             var data = [{
                 type: "sankey",
                 node: {
@@ -117,7 +136,8 @@
                         color: "black",
                         width: 0.5
                     },
-                    label: nodes.map(function (node) { return node.label.includes(" ") ? `"${node.label}"` : node.label; })
+                    label: nodes.map(function (node) { return node.label.includes(" ") ? `"${node.label}"` : node.label; }),
+                    color: nodes.map(function (node) { return nodeColors[node.label] || "#ffffff"; }) // Set default color
                 },
                 link: {
                     source: links.map(function (link) { return link.source; }),
@@ -125,17 +145,63 @@
                     value: links.map(function (link) { return link.value; })
                 }
             }];
+
             Plotly.newPlot("sankey", data, layout);
         }
 
-        // ブラウザサイズが変更されたときに実行する関数を定義
+        // Function to run when the browser size changes
         function updateSankeySize() {
             generateSankey()
         }
 
-        // ブラウザサイズ変更時に実行する関数をイベントリスナーに登録
+        // Add event listener for browser size change
         window.addEventListener("resize", updateSankeySize);
 
+        // Function to create color inputs and add event listeners for immediate update
+        function createColorInputs() {
+            // Extract nodes from textarea content and generate color selection UI
+            var linkStr = document.getElementById("links").value;
+            var linkData = linkStr.split("\n").map(function (row) {
+                return row.split("\t");
+            });
+
+            var uniqueNodes = new Set();
+            linkData.forEach(function (row) {
+                uniqueNodes.add(row[0].trim());
+                uniqueNodes.add(row[1].trim());
+            });
+
+            var nodeColorsDiv = document.getElementById("nodeColors");
+            nodeColorsDiv.innerHTML = ''; // Clear existing UI
+            uniqueNodes.forEach(function (node) {
+                var colorContainer = document.createElement("div");
+                colorContainer.classList.add("color-container");
+
+                var label = document.createElement("label");
+                label.textContent = node + ": ";
+                label.htmlFor = "color_" + node;
+
+                var input = document.createElement("input");
+                input.type = "color";
+                input.id = "color_" + node;
+                input.value = "#ff0000"; // Default color
+
+                colorContainer.appendChild(label);
+                colorContainer.appendChild(input);
+                nodeColorsDiv.appendChild(colorContainer);
+
+                // Add event listener for immediate color update
+                input.addEventListener('input', function() {
+                    generateSankey();
+                });
+            });
+        }
+
+        // Update color selection UI when textarea content changes
+        document.getElementById("links").addEventListener("change", createColorInputs);
+
+        // Initialize color inputs when the page loads
+        createColorInputs();
     </script>
 </body>
 <style>
@@ -146,6 +212,7 @@
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
+        text-align: center; /* 全てのテキストを中央ぞろえに */
         margin-right: 10%;
         margin-left: 10%;
     }
@@ -215,11 +282,27 @@
     }
 
     /* サンキーチャートのスタイル */
-
     #sankey {
         margin-top: 2rem;
         width: 100%;
     }
+    #updateColorsButton {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .color-container {
+            display: inline-block;
+            margin-right: 10px;
+        }
 </style>
 
 </html>

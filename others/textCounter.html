@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>文字数カウンター</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f8f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    }
+
+    .container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    }
+
+    h1 {
+    color: #333;
+    margin-bottom: 30px;
+    }
+
+    textarea {
+    width: 100%;
+    height: 400px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+    font-size: 16px;
+    font-family: inherit;
+    transition: border-color 0.3s;
+    overflow: auto;
+    }
+
+    textarea:focus {
+    outline: none;
+    border-color: #6c63ff;
+    }
+
+    textarea::-webkit-scrollbar {
+    width: 8px;
+    background-color: #f5f5f5;
+    }
+
+    textarea::-webkit-scrollbar-thumb {
+    background-color: #6c63ff;
+    border-radius: 4px;
+    }
+
+    .char-count {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #777;
+    }
+
+    #charCount {
+    font-weight: bold;
+    color: #6c63ff;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>文字数カウンター</h1>
+    <textarea id="textInput" placeholder="ここにテキストを入力してください"></textarea>
+    <div class="char-count">文字数: <span id="charCount">0</span></div>
+</div>
+
+<script>
+    document.getElementById('textInput').addEventListener('input', function() {
+    const text = this.value;
+    document.getElementById('charCount').textContent = text.length;
+    });
+</script>
+</body>
+</html>

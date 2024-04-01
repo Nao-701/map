@@ -1,8 +1,8 @@
 [文章添削ツール](https://naohiro701.github.io/others/checker.html)
 
-[作成途中](https://naohiro701.github.io/electricity/main.html)
+[今日の電力需給実績](https://naohiro701.github.io/electricity/main.html)
 
-[Speech to Text](https://naohiro701.github.io/others/speech_to_text.html)
+[文字数カウンター](https://naohiro701.github.io/others/textCounter.html)
 
 [Sankey Diagram Generator](https://naohiro701.github.io/others/Sankey_Diagram_Generator.html)
 

@@ -7,6 +7,7 @@
 </head>
 <body>
 <!--   <div class="tabs">
+  [Accessed June 19, 2022]
 
     <input id="hokkaido" type="radio" name="tab_item">
     <label class="tab_item" for="hokkaido">北海道</label>
@@ -130,17 +131,17 @@
   <h2>参考文献</h2>
   </center>
   <div class ="ref">
-    <a href="https://www.hepco.co.jp/network/renewable_energy/fixedprice_purchase/supply_demand_results.html">[1] 北海道電力ネットワーク株式会社, “北海道エリアの需給実績”,  [Accessed June 19, 2022]</a></br>
-    <a href="https://setsuden.nw.tohoku-epco.co.jp/download.html">[2] 東北電力ネットワーク, “過去実績データのダウンロード”, [Accessed June 19, 2022]</a></br>
-    <a href="https://www.tepco.co.jp/forecast/html/area_data-j.html">[3] 東京電力パワーグリッド株式会社, ”エリア需給実績データについて”, [Accessed June 19, 2022]</a></br>
-    <a href="https://www.rikuden.co.jp/nw_jyukyudata/area_jisseki.html">[4] 北陸電力送配電株式会社，”エリア需給実績について”, [Accessed June 19, 2022]</a></br>
-    <a href="https://powergrid.chuden.co.jp/denkiyoho/">[5] 中部電力パワーグリッド , “でんき予報”, , [Accessed June 19, 2022]</a></br>
-    <a href="https://www.kansai-td.co.jp/denkiyoho/area-performance.html">[6] 関西電力送配電株式会社 , “関西エリアの需給実績の公表”, [Accessed June 19, 2022]</a></br>
-    <a href="https://www.energia.co.jp/nw/service/retailer/data/area/">[7] 中国電力ネットワーク， “供給区域の需給実績”, [Accessed June 19, 2022]</a></br>
-    <a href="https://www.yonden.co.jp/nw/denkiyoho/index.html">[8] 四国電力送配電株式会社, “でんき予報(四国エリアの電力使用状況)”, [Accessed June 19, 2022]</a></br>
-    <a href="https://www.kyuden.co.jp/td_service_wheeling_rule-document_disclosure">[9] 九州電力送配電, “系統情報の公開”, [Accessed June 19, 2022]</a></br>
-    <a href="https://www.okiden.co.jp/business-support/service/supply-and-demand/">[10] 沖縄電力, “需給関連情報(需給実績)の公表”, [Accessed June 19, 2022]</a></br>
-    <a href="https://setsuden.nw.tohoku-epco.co.jp/graph.html"> [11] 東北電力ネットワーク, “東北6県・新潟エリアでんき予報”</a></br>
+    <a href="https://denkiyoho.hepco.co.jp/">[1] 北海道電力ネットワーク株式会社, “本日の電力使用状況データのダウンロード”</a></br>
+    <a href="https://setsuden.nw.tohoku-epco.co.jp/graph.html">[2] 東北電力ネットワーク, “電力使用状況データのダウンロード”</a></br>
+    <a href="https://www.tepco.co.jp/forecast">[3] 東京電力パワーグリッド株式会社, ”電力使用状況データ（CSVデータ）”</a></br>
+    <a href="https://www.rikuden.co.jp/nw/denki-yoho">[4] 北陸電力送配電株式会社，”本日の電力使用状況データのダウンロード”</a></br>
+    <a href="https://powergrid.chuden.co.jp/denkiyoho/">[5] 中部電力パワーグリッド , “エリア需給実績”</a></br>
+    <a href="https://www.kansai-td.co.jp/denkiyoho/area-performance.html">[6] 関西電力送配電株式会社 , “エリア需給実績”</a></br>
+    <a href="https://www.energia.co.jp/nw/service/retailer/data/area/">[7] 中国電力ネットワーク， “供給区域の需給実績”</a></br>
+    <a href="https://www.yonden.co.jp/nw/denkiyoho/index.html">[8] 四国電力送配電株式会社, “本日の使用状況データ”</a></br>
+    <a href="https://www.kyuden.co.jp/td_area_jukyu/jukyu.html">[9] 九州電力送配電, “エリア需給実績データ”</a></br>
+    <a href="https://www.okiden.co.jp/business-support/service/supply-and-demand/">[10] 沖縄電力, “データダウンロード”</a></br>
+<!--     <a href="https://setsuden.nw.tohoku-epco.co.jp/graph.html"> [11] 東北電力ネットワーク, “東北6県・新潟エリアでんき予報”</a></br> -->
   </div>
 </body>
 </html>
@@ -275,5 +276,37 @@ input[name="tab_item"] {
   margin: 0 auto;
   margin-top: 30px;
   margin-bottom: 30px;
-  }
+}
+
+/* リファレンスリストのスタイル */
+.ref {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* リンクのスタイル */
+.ref a {
+  text-decoration: none;
+  color: #007BFF;
+  transition: color 0.2s;
+}
+
+.ref a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* リンクの改行 */
+.ref br {
+  display: none;
+}
+
+/* リンク間の間隔 */
+.ref a:not(:last-child) {
+  margin-bottom: 10px;
+  display: block;
+}
+
 </style>

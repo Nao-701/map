@@ -25,7 +25,20 @@
             hls.loadSource(url);
             hls.attachMedia(video);
         }
+        // Update the URL hash
+        window.location.hash = encodeURIComponent(url);
     }
+
+    function loadFromHash() {
+        let hash = decodeURIComponent(window.location.hash.substring(1));
+        if (hash) {
+            document.getElementById("inputText").value = hash;
+            checkText();
+        }
+    }
+
+    // Load video URL from hash on page load
+    window.onload = loadFromHash;
 </script>
 <style>
     body {

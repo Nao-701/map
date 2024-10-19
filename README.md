@@ -1,5 +1,3 @@
-[文章添削ツール](https://naohiro701.github.io/others/checker.html)
-
 [今日の電力需給実績](https://naohiro701.github.io/electricity/main.html)
 
 [文字数カウンター](https://naohiro701.github.io/others/textCounter.html)
